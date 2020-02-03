@@ -127,3 +127,7 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+#IF THAT WILL NOT WORKING IDK WHAT I WILL TO DO
+bot-settings/*
+bot-settings/token.json
