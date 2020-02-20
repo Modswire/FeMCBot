@@ -15,12 +15,12 @@ class bot_listeners(commands.Cog):
             return
 
         #MC#1883's messages' responses
-        if "no thanks, i'm fine" in message.content.lower():
-            await message.channel.send("Hey, don't be sad. I'll hug you, okay? *hugs*")
-        if "i don't do hugs" in message.content.lower():
-            await message.channel.send("But I do! *hugs*")
-        if "*runs away*" in message.content.lower():
-            await message.channel.send("You can't run! *hugs <@{}>*".format(message.author.id))
+        #if "no thanks, i'm fine" in message.content.lower():
+        #    await message.channel.send("Hey, don't be sad. I'll hug you, okay? *hugs*")
+        #if "i don't do hugs" in message.content.lower():
+        #    await message.channel.send("But I do! *hugs*")
+        #if "*runs away*" in message.content.lower():
+        #    await message.channel.send("You can't run! *hugs <@{}>*".format(message.author.id))
 
         #FeMC pings
         if message.mentions:
@@ -32,9 +32,9 @@ class bot_listeners(commands.Cog):
                     if "*hugs " in message.content.lower():
                         await message.channel.send("*hugs <@{}> back*".format(message.author.id))
 
-        if "tokusatsu" in message.content.lower():
-            responses = "Ah! You said 'tokusatsu'? I like watching it!", "How about watch any toku show together?", "Did you see 'Tokusatsu GaGaGa'? I like this show!"
-            await message.channel.send(choice(responses))
+        #if "tokusatsu" in message.content.lower():
+        #    responses = "Ah! You said 'tokusatsu'? I like watching it!", "How about watch any toku show together?", "Did you see 'Tokusatsu GaGaGa'? I like this show!"
+        #    await message.channel.send(choice(responses))
 
 
 def setup(bot):
