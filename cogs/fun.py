@@ -1,12 +1,14 @@
-import discord
+from discord import User
 import json
 from discord.ext import commands
 from random import choice
 
+
 class Fun(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
-    
+        self.name = "Fun"
+
     @commands.command(name="ask")
     async def ask(self, ctx):
         yes_answers = "Of course!", "Just try to do it!", "Yes.", "You're right!"
@@ -15,14 +17,11 @@ class Fun(commands.Cog):
         answers = yes_answers + idk_answers + no_answers
         answer = choice(answers)
         await ctx.send(answer)
-    
+
     @commands.command(name="hug")
-    async def hug(self, ctx):
-        if ctx.message.mentions:
-            for user in ctx.message.mentions:
-                member = user
-        else:
-            member = ctx.message.author
+    async def hug(self, ctx, user: User = None):
+        if user == None:
+            user = ctx.author
         possible_responses = [
             "Guess, you'll like it! ",
             "Do you want to get a hug? ",
@@ -30,19 +29,19 @@ class Fun(commands.Cog):
             "Hehe. I knew you'd ask for it. ",
             " "
         ]
-        await ctx.send(choice(possible_responses) + "*hug <@{}>*".format(member.id))
-    
+        await ctx.send(choice(possible_responses) + "*hug <@{}>*".format(user.id))
+
     @commands.command(name="pat")
-    async def pat(self, ctx):
-        if ctx.message.mentions:
-            for user in ctx.message.mentions:
-                possible_responses = [
-                    "Hehe. Pats are a thing, I'm right? ",
-                    "I need to pat you? Okay! ",
-                    " ",
-                    "I can't don't pat you! "
-                ]
-                response = choice(possible_responses) + "*pat <@{}>*".format(user.id)
+    async def pat(self, ctx, user: User = None):
+        if user:
+            possible_responses = [
+                "Hehe. Pats are a thing, I'm right? ",
+                "I need to pat you? Okay! ",
+                " ",
+                "I can't no pat you! "
+            ]
+            response = choice(possible_responses) + \
+                " *pat <@{}>*".format(user.id)
         else:
             possible_responses = [
                 "Hehehe! This feels nice. Don't you think so?",
@@ -51,44 +50,39 @@ class Fun(commands.Cog):
             ]
             response = choice(possible_responses)
         await ctx.send(response)
-    
+
     @commands.command(name="ping", aliases=["pong"])
     async def ping(self, ctx):
-        latency = self.femcbot.latency
+        latency = self.bot.latency
         await ctx.send("Pong! " + str(latency * 1000) + "ms")
-    
+
     @commands.command(name="sun")
     async def sun(self, ctx):
-        await ctx.send("Who is the sun? You're the sun, {0}!".format(ctx.message.author.mention))
+        await ctx.send("Who is the sun? You're the sun, {0}!".format(ctx.author.mention))
 
     @commands.command(name="tickle")
-    async def tickle(self, ctx):
+    async def tickle(self, ctx, user: User = None):
+        if user == None:
+            user = ctx.author
         possible_responses = [
             "Don't try to run from me! ",
             "Hehehehe~ ",
             "Tickles are cool! ",
             " "
         ]
-        if ctx.message.mentions:
-            for user in ctx.message.mentions:
-                member = user
-        else:
-            member = ctx.message.author
-        await ctx.send(choice(possible_responses) + "*tickles <@{}>*".format(member.id))
-    
+        await ctx.send(choice(possible_responses) + "*tickles <@{}>*".format(user.id))
+
     @commands.command(name="bite")
-    async def bite(self, ctx):
+    async def bite(self, ctx, user: User = None):
+        if user == None:
+            user = ctx.author
         possible_responses = [
             "Why do I need to do it? Okaay. ",
             " ",
             "Sorry! "
         ]
-        if ctx.message.mentions:
-            for user in ctx.message.mentions:
-                member = user
-        else:
-            member = ctx.message.author
-        await ctx.send(choice(possible_responses) + "*bites <@{}>*".format(member.id))
+        await ctx.send(choice(possible_responses) + "*bites <@{}>*".format(user.id))
+
 
 def setup(bot):
     bot.add_cog(Fun(bot))
