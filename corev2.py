@@ -5,21 +5,19 @@ import asyncio
 import json
 import os
 import sr_api
-import addons.func as g
+from addons.func import get_token, get_prefix, get_owners, logsending
 from discord.ext import commands, tasks
 from random import randint, choice
 
 
 # bot defs
-token = g.get_token()
-bot = commands.Bot(command_prefix=g.get_prefix)
-bot.owners = g.get_owners()
-bot.coglist = g.get_cogs()
-bot.log = g.logsending
+token = get_token(tokentype="token")
+bot = commands.Bot(command_prefix=get_prefix)
+bot.owners = get_owners()
+bot.log = logsending
 bot.sr = sr_api.Client()
 
-for cog in bot.coglist:
-    bot.load_extension(cog)
+bot.remove_command("help")
 bot.load_extension('jishaku')
 
 
