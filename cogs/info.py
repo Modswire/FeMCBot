@@ -21,10 +21,10 @@ class Info(commands.Cog):
             cmds = c.get_commands()
             if cmds != []:
                 for cmd in cmds:
+                    if cmd.hidden == True:
+                        pass
                     if cmd.aliases:
                         help_value += f"`{cmd} | "+" | ".join(cmd.aliases) + "` "
-                    elif cmd.hidden == True:
-                        pass
                     else:
                         help_value += f"`{cmd}` "
                 if help_value != "":
