@@ -4,7 +4,6 @@ import discord
 import asyncio
 import json
 import os
-import sr_api
 from addons.functions import *
 from discord.ext import commands, tasks
 from random import randint, choice
@@ -16,7 +15,6 @@ bot = commands.Bot(command_prefix=get_prefix)
 bot.owners = get_owners
 bot.log = logsending
 bot.coglist = get_cogs
-bot.sr = sr_api.Client()
 
 bot.remove_command("help")
 bot.load_extension('jishaku')
