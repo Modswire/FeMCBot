@@ -23,7 +23,7 @@ class Info(commands.Cog):
                 for cmd in cmds:
                     if cmd.hidden == True:
                         pass
-                    if cmd.aliases:
+                    elif cmd.aliases:
                         help_value += f"`{cmd} | "+" | ".join(cmd.aliases) + "` "
                     else:
                         help_value += f"`{cmd}` "
