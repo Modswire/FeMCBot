@@ -132,7 +132,5 @@ dmypy.json
 bot-settings/*
 bot-settings/token.json
 
-/cogs/custom/*
 /cogs/test/*
-/cogs/__pycache__/*
 /addons/*

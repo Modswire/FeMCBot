@@ -1,3 +1,2 @@
 discord.py>=1.3.1
-jishaku>=1.18.0
-sr_api
+jishaku==1.17.0.169

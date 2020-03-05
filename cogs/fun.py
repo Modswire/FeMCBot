@@ -29,7 +29,7 @@ class Fun(commands.Cog):
             "Hehe. I knew you'd ask for it. ",
             " "
         ]
-        await ctx.send(choice(possible_responses) + "*hug <@{}>*".format(user.id))
+        await ctx.send(choice(possible_responses) + f"*hug <@{user.id}>*")
 
     @commands.command(name="pat")
     async def pat(self, ctx, user: User = None):
@@ -40,8 +40,7 @@ class Fun(commands.Cog):
                 " ",
                 "I can't no pat you! "
             ]
-            response = choice(possible_responses) + \
-                " *pat <@{}>*".format(user.id)
+            response = choice(possible_responses) + f"*pat <@{user.id}>*"
         else:
             possible_responses = [
                 "Hehehe! This feels nice. Don't you think so?",
@@ -54,11 +53,11 @@ class Fun(commands.Cog):
     @commands.command(name="ping", aliases=["pong"])
     async def ping(self, ctx):
         latency = self.bot.latency
-        await ctx.send("Pong! " + str(latency * 1000) + "ms")
+        await ctx.send(f"Pong! {(latency * 1000)} ms")
 
     @commands.command(name="sun")
     async def sun(self, ctx):
-        await ctx.send("Who is the sun? You're the sun, {0}!".format(ctx.author.mention))
+        await ctx.send(f"Who is the sun? You're the sun, {ctx.author.mention}!")
 
     @commands.command(name="tickle")
     async def tickle(self, ctx, user: User = None):
@@ -67,10 +66,10 @@ class Fun(commands.Cog):
         possible_responses = [
             "Don't try to run from me! ",
             "Hehehehe~ ",
-            "Tickles are cool! ",
+            "Tickles are cool! :sparkles: ",
             " "
         ]
-        await ctx.send(choice(possible_responses) + "*tickles <@{}>*".format(user.id))
+        await ctx.send(choice(possible_responses) + f"*tickles <@{user.id}>*")
 
     @commands.command(name="bite")
     async def bite(self, ctx, user: User = None):
@@ -81,8 +80,18 @@ class Fun(commands.Cog):
             " ",
             "Sorry! "
         ]
-        await ctx.send(choice(possible_responses) + "*bites <@{}>*".format(user.id))
+        await ctx.send(choice(possible_responses) + f"*bites <@{user.id}>*")
 
+    #@commands.command(name="echo", aliases=["e"])
+    #async def user_echo(self, ctx, *, text=None):
+    #    if text==None:
+    #        return await ctx.send("I can't echo without text :c")
+    #    await ctx.message.delete()
+    #    if "\@everyone " in text:
+    #        text.replace("\@everyone ", "еvеrуоnе ")
+    #    if "\@here " in text:
+    #        text.replace("\@here ", "hеrе ")
+    #    await ctx.send(text)
 
 def setup(bot):
     bot.add_cog(Fun(bot))
