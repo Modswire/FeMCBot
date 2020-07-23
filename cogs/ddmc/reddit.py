@@ -1,10 +1,9 @@
 import apraw
-from addons.get import get_reddit_login
-from addons.website import reddit_check
+from addons.website import reddit_check, get_reddit_login
 from addons.botinput import botinput
 from discord import Embed, utils
 from discord.ext import commands, tasks
-from asyncio import sleep
+from asyncio import sleep, new_event_loop, set_event_loop
 
 class rDDLCModsCog(commands.Cog):
     def __init__(self, bot):
@@ -13,26 +12,23 @@ class rDDLCModsCog(commands.Cog):
         self.reddit = apraw.Reddit(username=username, password=password, client_id=client_id, 
                                 client_secret=client_secret, user_agent=user_agent)
         self.ddlcmods = None
-        self.channel = utils.get(self.bot.get_all_channels(), id=682515108496408615) # actual one
+        #self.channel = utils.get(self.bot.get_all_channels(), id=682515108496408615) # actual one
         #self.channel = utils.get(self.bot.get_all_channels(), id=729966932538687508) # test one
         self.NewRedditMods.start()
     
-    @tasks.loop(minutes=10, count=1)
+    @tasks.loop(minutes=5, loop=set_event_loop(new_event_loop()))
     async def NewRedditMods(self):
         if not self.ddlcmods:
             self.ddlcmods = await self.reddit.subreddit("DDLCMods")
-        async for submission in self.ddlcmods.new.stream():
+        async for submission in self.ddlcmods.new():
             if not submission.link_flair_text in ["Full Release", "Demo Release"]:
                 continue
             check = reddit_check(submission.id)
             if not check:
                 continue
-            print("Sending the new mod")
             channel = utils.get(self.bot.get_all_channels(), id=682515108496408615)
-            print("sending")
             await channel.send(f"https://redd.it/{submission.id}")
             await sleep(15)
-        print("if you see it it probably end")
     
     @NewRedditMods.before_loop
     async def nrm_bl(self):
