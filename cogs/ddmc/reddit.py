@@ -24,7 +24,7 @@ class rDDLCModsCog(commands.Cog):
         async for submission in self.ddlcmods.new.stream(skip_existing=True):
             if not submission.link_flair_text in ["Full Release", "Demo Release"]:
                 continue
-            channel = utils.get(self.bot.get_all_channels(), id=729966932538687508)
+            channel = utils.get(self.bot.get_all_channels(), id=682515108496408615)
             await channel.send(f"https://redd.it/{submission.id}")
             await sleep(15)
     
