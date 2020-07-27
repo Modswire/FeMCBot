@@ -61,13 +61,16 @@ Thanks!
     async def dmlistener(self):
         femcbot = await self.reddit.user.me()
         async for message in femcbot.unread.stream(skip_existing=True):
-            e = Embed(color=Colour.from_rgb(255, 215, 0))
-            name = (await message.author()).name
-            e.set_author(name="u/"+name, url="https://reddit.com/u/"+name)
-            e.add_field(name=message.subject, value=message.body)
-            e.set_footer(text="Message ID:"+str(message.id))
-            channel = self.bot.get_channel(730433832725250088)
-            await channel.send(embed=e)
+            try:
+                e = Embed(color=Colour.from_rgb(255, 215, 0))
+                name = (await message.author()).name
+                e.set_author(name="u/"+name, url="https://reddit.com/u/"+name)
+                e.add_field(name=message.subject, value=message.body)
+                e.set_footer(text="Message ID:"+str(message.id))
+                channel = self.bot.get_channel(730433832725250088)
+                await channel.send(embed=e)
+            except Exception as e:
+                print(e)
 
     
 
