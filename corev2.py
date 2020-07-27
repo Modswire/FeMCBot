@@ -10,12 +10,19 @@ logger.addHandler(handler)
 
 class FeMCBot(commands.Bot):
 	def __init__(self):
+		logger.info("Initializing the bot")
 		super().__init__(command_prefix=get_prefix, owner_id=321566831670198272)
+		logger.info("Loading jishaku")
 		self.load_extension("jishaku")
+		for cog in get_cogs():
+			try:
+				self.load_extension(cog)
+				logger.info(f"Loaded extension {cog}")
+			except:
+				logger.warning(f"I was unable to load extension {cog}", exc_info=1)
+	
+	async def on_ready(self):
+		logger.info("Logged in as "+bot.user.name)
 
 bot = FeMCBot()
-
-@bot.event
-async def on_ready():
-	logger.info("Logged as in "+bot.user.name)
 bot.run(get_token())
