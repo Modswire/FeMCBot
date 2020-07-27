@@ -7,4 +7,8 @@ class FeMCBot(commands.Bot):
 		self.load_extension("jishaku")
 
 bot = FeMCBot()
+
+@bot.event
+async def on_ready():
+	print("Logged as in "+bot.user.name)
 bot.run(get_token())
