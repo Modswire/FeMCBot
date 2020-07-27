@@ -30,9 +30,9 @@ class WebsiteCog(commands.Cog):
         mod = (await get_mod("mod/latest/", self.headers))[0]
         check = check_id(mod["modID"])
         if check: 
-            logger.info(f"Mod with ID {mod["modID"]} was already send to Discord, returning...")
+            logger.info(f'Mod with ID {mod["modID"]} was already send to Discord, returning...')
             return
-        logger.info(f"Mod with ID {mod["modID"]} is definitely new, sending to Discord...")
+        logger.info(f'Mod with ID {mod["modID"]} is definitely new, sending to Discord...')
         e = collect_embed(mod)
         await self.modchannel.send(embed=e)
         logger.info("Mod was send, returning...")
@@ -58,7 +58,7 @@ class WebsiteCog(commands.Cog):
         mod = []
         while mod == []:
             mod = await get_mod("mod/?modID="+str(randint(1,data["modids"][-1])), self.headers)
-        logger.info(f"{ctx.author} got mod with ID {mod["modID"]}")
+        logger.info(f'{ctx.author} got mod with ID {mod["modID"]}')
         e = collect_embed(mod[0])
         await ctx.send(embed=e)
         
