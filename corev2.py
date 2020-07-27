@@ -1,5 +1,6 @@
 from discord.ext import commands
 from addons.func import get_prefix, get_token, get_cogs
+from sys import exc_info
 import logging
 
 logger = logging.getLogger("bot")
@@ -23,6 +24,10 @@ class FeMCBot(commands.Bot):
 	
 	async def on_ready(self):
 		logger.info("Logged in as "+bot.user.name)
+	
+	async def on_error(self, event, *args, **kwargs):
+		logger.error("There's an error!", exc_info=1)
+		
 
 bot = FeMCBot()
 bot.run(get_token())
