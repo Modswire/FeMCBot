@@ -69,7 +69,7 @@ Thanks!
             e.set_author(name="u/"+name, url="https://reddit.com/u/"+name)
             e.add_field(name=message.subject, value=message.body)
             e.set_footer(text="Message ID:"+str(message.id))
-            channel = self.bot.get_channel(730403271902101545)
+            channel = self.bot.get_channel(730433832725250088)
             await channel.send(embed=e)
 
     
