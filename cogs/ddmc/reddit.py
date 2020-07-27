@@ -1,12 +1,9 @@
 import apraw
-import logging
 from addons.website import reddit_check, get_reddit_login
 from addons.botinput import botinput
 from discord import Embed, utils, Colour
 from discord.ext import commands, tasks
 from asyncio import sleep, new_event_loop, set_event_loop
-
-logging.basicConfig(filename="logs/reddit.log", level=logging.INFO)
 
 class rDDLCModsCog(commands.Cog):
     def __init__(self, bot):
