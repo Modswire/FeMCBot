@@ -8,7 +8,9 @@ from asyncio import sleep, new_event_loop, set_event_loop
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.DEBUG)
-
+handler = logging.FileHandler(filename='logs/reddit.log', encoding='utf-8', mode='w')
+handler.setFormatter(logging.Formatter('%(asctime)s:%(levelname)s:%(name)s: %(message)s'))
+logger.addHandler(handler)
 
 class rDDLCModsCog(commands.Cog):
     def __init__(self, bot):
