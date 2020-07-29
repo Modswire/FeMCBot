@@ -6,10 +6,8 @@ from random import randint
 import logging
 
 logger = logging.getLogger(__name__)
-logger.setLevel(logging.DEBUG)
-handler = logging.FileHandler(filename='logs/ddmc.log', encoding='utf-8', mode='w')
-handler.setFormatter(logging.Formatter('%(asctime)s:%(levelname)s:%(name)s: %(message)s'))
-logger.addHandler(handler)
+logger.setLevel(logging.INFO)
+
 
 class WebsiteCog(commands.Cog):
     def __init__(self, bot):
