@@ -12,7 +12,7 @@ logger.addHandler(handler)
 class FeMCBot(commands.Bot):
     def __init__(self):
         logger.info("Initializing the bot")
-        super().__init__(command_prefix=get_prefix, owner_id=321566831670198272)
+        super().__init__(command_prefix=get_prefix, owner_ids=[321566831670198272, 154328221154803712])
         logger.info("Loading jishaku")
         self.load_extension("jishaku")
         for cog in get_cogs():
