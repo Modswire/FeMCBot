@@ -43,7 +43,7 @@ class rDDLCModsCog(commands.Cog):
                 logger.info("New Reddit Mods: It seems to be a release post, so it's now in the chat! Sleeping for 15 seconds")
                 await sleep(15)
             except Exception as e:
-                logger.exception("New Reddit Mods: something went wrong.")
+                logger.exception("New Reddit Mods: something went wrong.", exc_info=1)
     
     @NewRedditMods.before_loop
     async def nrm_bl(self):
@@ -95,15 +95,15 @@ Thanks!
             try:
                 e = Embed(color=Colour.from_rgb(255, 215, 0))
                 name = (await message.author()).name
-                e.set_author(name="u/"+name, url="https://reddit.com/u/"+name)
+                e.set_author(name="From u/"+name, url="https://reddit.com/u/"+name)
                 e.add_field(name=message.subject, value=message.body)
-                e.set_footer(text="Message ID:"+str(message.id))
+                e.set_footer(text="Message ID: "+str(message.id))
                 logger.info("DM Listener: Embed is done, sending...")
                 channel = self.bot.get_channel(730433832725250088)
                 await channel.send(embed=e)
                 logger.info("DM Listener: Done!")
             except Exception as e:
-                logger.exception("DM Listener: something went wrong.")
+                logger.exception("DM Listener: something went wrong.", exc_info=1)
 
     
 
