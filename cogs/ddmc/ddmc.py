@@ -59,7 +59,10 @@ class WebsiteCog(commands.Cog):
             data = load(f)
         mod = []
         while mod == []:
-            mod = (await get_mod("mod/?modID="+str(randint(1,data["modids"][-1])), self.headers))[0]
+            try:
+                mod = (await get_mod("mod/?modID="+str(randint(1,data["modids"][-1])), self.headers))[0]
+            except:
+                mod = []
         logger.info(f'{ctx.author} got mod with ID {mod["modID"]}')
         e = collect_embed(mod)
         await ctx.send(embed=e)
