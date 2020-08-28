@@ -50,7 +50,7 @@ class rDDLCModsCog(commands.Cog):
         await self.bot.wait_until_ready()
     
     @commands.command()
-    @commands.has_role(667980472164417539)
+    @commands.has_any_role(667980472164417539, 635047784269086740)
     async def redditdm(self, ctx, reddituser):
         logger.info(f"Reddit DM: {ctx.author} decided to write u/{reddituser}")
         user = await self.reddit.redditor(reddituser)
