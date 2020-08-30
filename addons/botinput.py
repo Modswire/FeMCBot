@@ -16,7 +16,7 @@ async def botinput(bot, ctx, typ: type, cancel_str: str = "cancel", ch = None, e
 
     while True:
         try:
-            inp: discord.Message = await bot.wait_for('message', check=check, timeout=60.0)
+            inp: discord.Message = await bot.wait_for('message', check=check)
             if del_response:
                 await inp.delete()
             if inp.content.lower() == cancel_str.lower():
