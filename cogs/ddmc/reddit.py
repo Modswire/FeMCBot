@@ -39,7 +39,10 @@ class rDDLCModsCog(commands.Cog):
                 if not submission.link_flair_text in ["Full Release", "Demo Release"]:
                     continue
                 channel = utils.get(self.bot.get_all_channels(), id=682515108496408615)
-                await channel.send(f"https://redd.it/{submission.id}")
+                author = await submission.author()
+                text = f"Author: {name}\nPost name: {submission.title}\nLink: https://redd.it/{submission.id}"
+                #await channel.send(f"https://redd.it/{submission.id}")
+                await channel.send(text)
                 logger.info("New Reddit Mods: It seems to be a release post, so it's now in the chat! Sleeping for 15 seconds")
                 await sleep(15)
             except Exception as e:
