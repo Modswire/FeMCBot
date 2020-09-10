@@ -40,7 +40,7 @@ class rDDLCModsCog(commands.Cog):
                     continue
                 channel = utils.get(self.bot.get_all_channels(), id=682515108496408615)
                 author = await submission.author()
-                text = f"Author: {name}\nPost name: {submission.title}\nLink: https://redd.it/{submission.id}"
+                text = f"Author: {author.name}\nPost name: {submission.title}\nLink: https://redd.it/{submission.id}"
                 #await channel.send(f"https://redd.it/{submission.id}")
                 await channel.send(text)
                 logger.info("New Reddit Mods: It seems to be a release post, so it's now in the chat! Sleeping for 15 seconds")
