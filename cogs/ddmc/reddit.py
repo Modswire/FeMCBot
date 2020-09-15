@@ -57,10 +57,10 @@ class rDDLCModsCog(commands.Cog):
         logger.info(f"Reddit DM: {ctx.author} decided to write u/{reddituser}")
         try:
             user = await self.reddit.redditor(reddituser)
-        except:
+        except Exception as e:
             return await ctx.send("There's no Redditors with such nickname...")
         
-        if mtype == None or mtype.lower() not in mtypes:
+        if mtype is None or mtype.lower() not in mtypes:
             await ctx.send("Enter the type of the message: (permission or custom)")
             mtype = await botinput(self.bot, ctx, str, ch=lambda x: x.lower() in mtypes, err="That's wrong type of message!")
         
@@ -93,7 +93,7 @@ Thanks!
 
         try:
             await user.message(subject=subject, text=message)
-        except:
+        except Exception as e:
             logger.exception("Message sending failed: \n", exc_info=1)
             await ctx.send("Message sending failed, sent the traceback to log file \n\n<@321566831670198272>")
             return

@@ -58,7 +58,7 @@ class WebsiteCog(commands.Cog):
         while mod == []:
             try:
                 mod = (await get_mod("mod/?modID="+str(randint(1,max(data["modids"]))), self.headers))[0]
-            except:
+            except Exception as e:
                 mod = []
         logger.info(f'{ctx.author} got mod with ID {mod["modID"]}')
         e = collect_embed(mod)

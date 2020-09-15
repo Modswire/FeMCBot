@@ -48,8 +48,7 @@ def check_name(a, b, c):
     if "False" in fail:
         ind = fail.index("False")
         return values[ind]
-    else:
-        return False
+    return False
 
 def collect_embed(mod):
     e = Embed(colour=Colour.from_rgb(255, 215, 0))

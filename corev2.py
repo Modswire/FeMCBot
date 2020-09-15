@@ -19,7 +19,7 @@ class FeMCBot(commands.Bot):
             try:
                 self.load_extension(cog)
                 logger.info(f"Loaded extension {cog}")
-            except:
+            except Exception as e:
                 logger.warning(f"I was unable to load extension {cog}", exc_info=1)
     
     async def on_ready(self):
