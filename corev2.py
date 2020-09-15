@@ -1,6 +1,5 @@
 from discord.ext import commands
-from addons.func import get_prefix, get_token, get_cogs
-from sys import exc_info
+from addons.func import get_prefix, get_token
 import logging
 
 logger = logging.getLogger("bot")
@@ -13,9 +12,10 @@ class FeMCBot(commands.Bot):
     def __init__(self):
         logger.info("Initializing the bot")
         super().__init__(command_prefix=get_prefix, owner_ids=[321566831670198272, 154328221154803712])
-        logger.info("Loading jishaku")
+        self.cogs = ["cogs.ddmc.ddmc", "cogs.ddmc.reddit"]
         self.load_extension("jishaku")
-        for cog in get_cogs():
+        logger.info("Loaded extension jishaku")
+        for cog in self.cogs:
             try:
                 self.load_extension(cog)
                 logger.info(f"Loaded extension {cog}")
@@ -30,4 +30,4 @@ class FeMCBot(commands.Bot):
         
 
 bot = FeMCBot()
-bot.run(get_token())
+bot.run(get_token("token"))

@@ -12,15 +12,11 @@ handler.setFormatter(logging.Formatter('%(asctime)s:%(levelname)s:%(name)s: %(me
 logger.addHandler(handler)
 
 class WebsiteCog(commands.Cog):
-    def __init__(self, bot):
+    def __init__(self, bot: commands.Bot):
         logger.info("Initializing the dokidokimodclub.com cog")
         self.bot = bot
         self.headers = get_headers()
-        # actual one
-        self.modchannel = utils.get(self.bot.get_all_channels(), id=680041658922041425)
-        self.rumodchannel = utils.get(self.bot.get_all_channels(), id=743827110786891816)
-        # test one
-        #self.modchannel = utils.get(self.bot.get_all_channels(), id=730403332795007018)
+        self.channels = [680041658922041425, 743827110786891816]
         logger.info("Initilization is done, run mod checking loop")
         self.ModChecking.start()
         logger.info("Mod checking loop is started!")
@@ -35,8 +31,9 @@ class WebsiteCog(commands.Cog):
             return
         logger.info(f'Mod with ID {mod["modID"]} is definitely new, sending to Discord...')
         e = collect_embed(mod)
-        for channel in [self.modchannel, self.rumodchannel]:
-            await channel.send(embed=e)
+        for channel in self.channels:
+            c = self.bot.get_channel(channel)
+            await c.send(embed=e)
         logger.info("Mod was send, returning...")
     
     @commands.command(name="disable-checking")
@@ -60,7 +57,7 @@ class WebsiteCog(commands.Cog):
         mod = []
         while mod == []:
             try:
-                mod = (await get_mod("mod/?modID="+str(randint(1,data["modids"][-1])), self.headers))[0]
+                mod = (await get_mod("mod/?modID="+str(randint(1,max(data["modids"]))), self.headers))[0]
             except:
                 mod = []
         logger.info(f'{ctx.author} got mod with ID {mod["modID"]}')

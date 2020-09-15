@@ -3,6 +3,7 @@ import aiohttp
 from addons.func import get_token
 from discord import Embed, Colour
 from json import load, dump
+from datetime import datetime
 
 def get_reddit_login():
     with open("bot-settings/reddit.json", "r") as f:
@@ -43,12 +44,7 @@ def check_id(modid):
 
 def check_name(a, b, c):
     values = [a, b, c]
-    fail = []
-    for i in values:
-        if not i:
-            fail.append("True")
-        else:
-            fail.append("False")
+    fail = ["True" if not i in values else "False"]
     if "False" in fail:
         ind = fail.index("False")
         return values[ind]
@@ -60,11 +56,11 @@ def collect_embed(mod):
     e.add_field(name="Mod Name", value=mod["modName"])
     e.add_field(name="ID", value=str(mod["modID"]))
     e.add_field(name="Status", value=mod["modStatus"])
-    e.add_field(name="Release Date", value=mod["modDate"][:9])
+    e.add_field(name="Release Date", value=str(datetime.strptime(mod["modDate"], "%Y-%m-%d")))
     e.add_field(name="Short Description", value=mod["modShortDescription"])
     e.add_field(name="Playtime", value=str(mod["modPlayTimeHours"])+" hours "+str(mod["modPlayTimeMinutes"])+" minutes")
     e.add_field(name="Rating", value=str(mod["modRating"]))
-    e.add_field(name="Is NSFW?", value="Yes" if mod["modNSFW"]==True else "No")
+    e.add_field(name="Is NSFW?", value="Yes" if mod["modNSFW"] else "No")
     e.add_field(name="Link", value="[Click](https://www.dokidokimodclub.com/mod/"+str(mod["modID"])+"/)")
     e.set_footer(text="Powered by dokidokimodclub.com's API")
     return e
