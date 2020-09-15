@@ -12,10 +12,10 @@ class FeMCBot(commands.Bot):
     def __init__(self):
         logger.info("Initializing the bot")
         super().__init__(command_prefix=get_prefix, owner_ids=[321566831670198272, 154328221154803712])
-        self.cogs = ["cogs.ddmc.ddmc", "cogs.ddmc.reddit"]
+        self.coglist = ["cogs.ddmc.ddmc", "cogs.ddmc.reddit"]
         self.load_extension("jishaku")
         logger.info("Loaded extension jishaku")
-        for cog in self.cogs:
+        for cog in self.coglist:
             try:
                 self.load_extension(cog)
                 logger.info(f"Loaded extension {cog}")
