@@ -27,6 +27,10 @@ class rDDLCModsCog(commands.Cog):
         self.dmlistener.start()
         logger.info("Streams are running!")
     
+    def cog_unload(self):
+        self.NewRedditMods.stop()
+        self.dmlistener.stop()
+    
     @tasks.loop(minutes=1, count=1, loop=set_event_loop(new_event_loop()))
     async def NewRedditMods(self):
         logger.info("New Reddit Mods: Getting the subreddit")

@@ -21,6 +21,9 @@ class WebsiteCog(commands.Cog):
         self.ModChecking.start()
         logger.info("Mod checking loop is started!")
     
+    def cog_unload(self):
+        self.ModChecking.stop()
+    
     @tasks.loop(hours=5, loop=set_event_loop(new_event_loop()))
     async def ModChecking(self):
         logger.info("Looking for new mods...")
