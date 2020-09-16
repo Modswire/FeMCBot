@@ -34,7 +34,6 @@ def check_id(modid):
     with open("bot-settings/modlist.json", 'r') as f:
         data = load(f)
     if modid in data["modids"]:
-        print(13)
         return True
     data["modids"].append(modid)
     with open("bot-settings/modlist.json", 'w') as f:
