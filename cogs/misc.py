@@ -9,7 +9,7 @@ class MiscCog(commands.Cog):
     @commands.command()
     async def purge(self, ctx, amount:int=50):
         deleted = await ctx.channel.purge(limit=amount)
-        await ctx.send(f"I deleted {deleted} message(s) from this channel.")
+        await ctx.send(f"I deleted {amount} message(s) from this channel.")
 
 def setup(bot):
     bot.add_cog(MiscCog(bot))
