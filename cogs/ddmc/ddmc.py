@@ -16,7 +16,7 @@ class WebsiteCog(commands.Cog):
         logger.info("Initializing the dokidokimodclub.com cog")
         self.bot = bot
         self.headers = get_headers()
-        self.channels = [680041658922041425, 743827110786891816]
+        self.channels = [680041658922041425]
         logger.info("Initilization is done, run mod checking loop")
         self.ModChecking.start()
         logger.info("Mod checking loop is started!")
