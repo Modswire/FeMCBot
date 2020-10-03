@@ -63,7 +63,7 @@ class rDDLCModsCog(commands.Cog):
     async def addignore(self, ctx, username):
         self.nrmignore.append(username)
         with open("bot-settings/ignore.json", "w") as f:
-            json.dump(self.nrmignore, f)
+            json.dump({"data": self.nrmignore}, f)
             await ctx.send(f"{username}'s posts will be ignored from now!")
     
     @commands.command()
