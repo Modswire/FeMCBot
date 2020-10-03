@@ -1,5 +1,6 @@
 import apraw
 import logging
+import json
 from addons.website import reddit_check, get_reddit_login
 from addons.botinput import botinput
 from discord import Embed, utils, Colour
@@ -20,6 +21,7 @@ class rDDLCModsCog(commands.Cog):
         self.reddit = apraw.Reddit(username=username, password=password, client_id=client_id, 
                                 client_secret=client_secret, user_agent=user_agent)
         self.ddlcmods = None
+        self.nrmignore = (json.load(open("bot-settings/ignore.json", "r")))["data"]
         self.nrmchannel = self.bot.get_channel(682515108496408615) # actual one
         self.dmchannel = self.bot.get_channel(730433832725250088)
         logger.info("Initilization is done, run streams")
@@ -43,6 +45,8 @@ class rDDLCModsCog(commands.Cog):
                 if not submission.link_flair_text in ["Full Release", "Demo Release"]:
                     continue
                 author = await submission.author()
+                if author.name in self.nrmignore:
+                    continue
                 text = f"Author: {author.name}\nPost name: {submission.title}\nLink: https://redd.it/{submission.id}"
                 await self.nrmchannel.send(text)
                 logger.info("New Reddit Mods: It seems to be a release post, so it's now in the chat! Sleeping for 15 seconds")
@@ -53,6 +57,14 @@ class rDDLCModsCog(commands.Cog):
     @NewRedditMods.before_loop
     async def nrm_bl(self):
         await self.bot.wait_until_ready()
+        
+    @commands.command()
+    @commands.has_role(667980472164417539)
+    async def addignore(self, ctx, username):
+        self.nrmignore.append(username)
+        with open("bot-settings/ignore.json", "w") as f:
+            json.dump(self.nrmignore, f)
+            await ctx.send(f"{username}'s posts will be ignored from now!")
     
     @commands.command()
     @commands.has_any_role(667980472164417539, 635047784269086740)
