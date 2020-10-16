@@ -16,6 +16,8 @@ class FeMCBot(commands.Bot):
         self.load_extension("jishaku")
         logger.info("Loaded extension jishaku")
         for cog in self.coglist:
+            if cog == "cogs.ddmc.reddit":
+                continue
             try:
                 self.load_extension(cog)
                 logger.info(f"Loaded extension {cog}")
