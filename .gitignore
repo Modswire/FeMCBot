@@ -29,4 +29,5 @@ venv.bak/
 bot-settings/
 
 # Addons, test cogs, etc
+.vscode/
 logs/
