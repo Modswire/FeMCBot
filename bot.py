@@ -1,4 +1,5 @@
 import discord
+from datetime import datetime
 from discord.ext import commands
 from addons.func import get_token
 
@@ -26,6 +27,12 @@ class FeMCBot(commands.Bot):
     
     async def on_ready(self):
         print("Logged in as "+self.user.name)
+    
+    @property
+    async def embed(self):
+        embed = discord.Embed(colour=discord.Colour(0).from_rgb(255, 215, 0))
+        embed.timestamp = datetime.utcnow()
+        return embed
 
 bot = FeMCBot()
 bot.run(get_token("discord"))

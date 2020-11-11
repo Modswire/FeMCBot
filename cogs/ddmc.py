@@ -1,5 +1,5 @@
 import discord
-from discord.ext import commands
+from discord.ext import commands, tasks
 from addons.website import *
 
 from typing import TYPE_CHECKING
@@ -16,6 +16,10 @@ class WebsiteCog(commands.Cog):
 
     @commands.command()
     async def mod(self, ctx: commands.Context):
+        pass
+
+    @tasks.loop(hours=1)
+    async def _ModCheckingLoop(self):
         pass
 
 def setup(bot: "FeMCBot"):
