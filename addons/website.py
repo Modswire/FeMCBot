@@ -48,17 +48,3 @@ def check_name(a, b, c):
         ind = fail.index("False")
         return values[ind]
     return False
-
-def collect_embed(mod):
-    e = Embed(colour=Colour.from_rgb(255, 215, 0))
-    e.add_field(name="Mod Name", value=mod["modName"])
-    e.add_field(name="ID", value=str(mod["modID"]))
-    e.add_field(name="Status", value=mod["modStatus"])
-    e.add_field(name="Release Date", value=str(datetime.strptime(mod["modDate"][:10], "%Y-%m-%d")))
-    e.add_field(name="Short Description", value=mod["modShortDescription"])
-    e.add_field(name="Playtime", value=str(mod["modPlayTimeHours"])+" hours "+str(mod["modPlayTimeMinutes"])+" minutes")
-    e.add_field(name="Rating", value=str(mod["modRating"]))
-    e.add_field(name="Is NSFW?", value="Yes" if mod["modNSFW"] else "No")
-    e.add_field(name="Link", value="[Click](https://www.dokidokimodclub.com/mod/"+str(mod["modID"])+"/)")
-    e.set_footer(text="Powered by dokidokimodclub.com's API")
-    return e

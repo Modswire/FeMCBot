@@ -10,7 +10,7 @@ class FeMCBot(commands.Bot):
         intents = discord.Intents.none()
         intents.guilds = True
         intents.messages = True
-        intents.members = True
+        #intents.members = True
         intents.bans = True
 
         # Getting bot info
@@ -35,4 +35,4 @@ class FeMCBot(commands.Bot):
         return embed
 
 bot = FeMCBot()
-bot.run(get_token("discord"))
+bot.run(get_token("atoken"))
