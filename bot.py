@@ -29,7 +29,7 @@ class FeMCBot(commands.Bot):
         self.debugchannel = self.get_channel(761288869881970718) # test
 
         # Cogs loading
-        coglist = ["jishaku"]
+        coglist = ["jishaku", "cogs.ddmc", "cogs.reddit"]
         for cog in coglist:
             self.load_extension(cog)
             print(f"{cog} was loaded")

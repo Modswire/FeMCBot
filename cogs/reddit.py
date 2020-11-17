@@ -118,6 +118,17 @@ Thanks!
             except Exception as e:
                 await self.bot.debugchannel.send("<@321566831670198272> (DM loop)")
                 await self.bot.debugchannel.send(e)
+    
+    
+    # Listeners
+    @commands.Cog.listener()
+    async def on_command_error(self, ctx: commands.Context, exception):
+        if isinstance(exception, commands.ConversionError):
+            if exception.converter == RedditorConverter:
+                return await ctx.send("Redditor was not found. Check the username, is it correct?")
+        else:
+            await self.bot.debugchannel.send("<@321566831670198272> (command error)")
+            await self.bot.debugchannel.send(exception)
 
 def setup(bot: "FeMCBot"):
     bot.add_cog(RedditCog(bot))
