@@ -1,7 +1,9 @@
 import asyncio
 import aiohttp
+import apraw
 from addons.func import get_token
 from discord import Embed, Colour
+from discord.ext import commands
 from json import load, dump
 from datetime import datetime
 
@@ -30,21 +32,7 @@ async def get_mod(endpoint, headers=None):
             t = await resp.json()
             return t
 
-def check_id(modid):
-    with open("bot-settings/modlist.json", 'r') as f:
-        data = load(f)
-    if modid in data["modids"]:
-        return True
-    data["modids"].append(modid)
-    with open("bot-settings/modlist.json", 'w') as f:
-        dump(data, f)
-    return False
-
-
-def check_name(a, b, c):
-    values = [a, b, c]
-    fail = ["True" if not i in values else "False"]
-    if "False" in fail:
-        ind = fail.index("False")
-        return values[ind]
-    return False
+class RedditorConverter(commands.Converter):
+    async def convert(self, ctx, argument):
+        user = await ctx.bot.reddit.redditor(argument)
+        return user
