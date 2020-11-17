@@ -2,6 +2,7 @@ import discord
 import json
 from discord.ext import commands, tasks
 from random import choice
+from asyncio import sleep
 from addons.website import *
 
 from typing import TYPE_CHECKING
@@ -40,6 +41,7 @@ class WebsiteCog(commands.Cog):
             result = [i for i in modlist if not i in self._mod_list]
             for i in result:
                 await self.channel.send(embed=(await self.collect_embed(i)))
+                await sleep(5) # so I would have chance to shutdown the bot if it'll start spamming the mods
             self._mod_list = modlist
         if not self.SaveCurrent.is_running():
             self.SaveCurrent.start()
