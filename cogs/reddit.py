@@ -27,7 +27,7 @@ class RedditCog(commands.Cog):
         self.ReleasesLoop.cancel()
 
     def msgtypes(self, argument):
-        return argument.lower() if argument.lower() in ["custom", "permission"]
+        return argument.lower() if argument.lower() in ["custom", "permission"] else None
     
     @commands.is_owner()
     @commands.group(name="ignore", invoke_without_command=False)
@@ -39,6 +39,9 @@ class RedditCog(commands.Cog):
     # @commands.has_any_role(635047784269086740, 667980472164417539)
     @commands.command(aliases=["rdm"])
     async def redditdm(self, ctx: commands.Context, redditor: RedditorConverter, msgtype: msgtypes):
+
+        if msgtype is None:
+            return await ctx.send("Run the command again and input correct type ('custom' or 'permission).")
 
         if msgtype == "permission":
             await ctx.send(f"Input u/{redditor.name}'s mod name:", delete_after=60)
