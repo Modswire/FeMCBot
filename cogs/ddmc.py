@@ -13,8 +13,7 @@ if TYPE_CHECKING:
 class WebsiteCog(commands.Cog):
     def __init__(self, bot: "FeMCBot"):
         self.bot = bot
-        # self.channel = bot.get_channel(680041658922041425) # actual
-        self.channel = bot.get_channel(761288869881970718) # test
+        self.channel = None
         self.headers = get_headers()
         self._mod_list = []
         self.ModCheckingLoop.start()
@@ -33,6 +32,9 @@ class WebsiteCog(commands.Cog):
 
     @tasks.loop(hours=1)
     async def ModCheckingLoop(self):
+        if self.channel is None:
+            # self.channel = bot.get_channel(761288869881970718) # test
+            self.channel = bot.get_channel(680041658922041425) # actual
         modlist = await get_mod("mod/", headers=self.headers)
         if self._mod_list == []:
             ids = json.load(open("bot-settings/modlist.json", "r"))["ids"]
@@ -59,7 +61,6 @@ class WebsiteCog(commands.Cog):
         e.add_field(name="Status", value=mod["modStatus"])
         e.add_field(name="Release Date",value=str(mod["modDate"][:10]))
         e.add_field(name="Short Description", value=mod["modShortDescription"], inline=False)
-        # e.add_field(name="Long Description", value=mod["modDescription"], inline=False)
         e.add_field(name="Playtime",value="{0} hours {1} minutes".format(mod["modPlayTimeHours"], mod["modPlayTimeMinutes"]))
         e.add_field(name="Rating", value=str(mod["modRating"]))
         e.add_field(name="Is NSFW?", value="Yes" if mod["modNSFW"] else "No")

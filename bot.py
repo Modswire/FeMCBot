@@ -2,8 +2,7 @@ import discord
 import apraw
 from datetime import datetime
 from discord.ext import commands
-from addons.func import get_token
-from addons.website import get_reddit_login
+from addons.website import get_reddit_login, get_token
 
 class FeMCBot(commands.Bot):
     def __init__(self):
@@ -12,7 +11,7 @@ class FeMCBot(commands.Bot):
         intents = discord.Intents.none()
         intents.guilds = True
         intents.messages = True
-        #intents.members = True
+        intents.members = True
         intents.bans = True
 
         # Getting bot info
@@ -25,10 +24,6 @@ class FeMCBot(commands.Bot):
 
         super().__init__(command_prefix="femc ", intents=intents, owner_ids=self.owner_ids)
 
-        # Some channels needed
-        # self.debugchannel = self.get_channel(635546287420342362) # FeMC
-        self.debugchannel = self.get_channel(761288869881970718) # test
-
         # Cogs loading
         coglist = ["jishaku", "cogs.ddmc", "cogs.reddit"]
         for cog in coglist:
@@ -37,6 +32,10 @@ class FeMCBot(commands.Bot):
     
     async def on_ready(self):
         print("Logged in as "+self.user.name)
+
+        # Some channels needed
+        self.debugchannel = self.get_channel(635546287420342362) # FeMC
+        # self.debugchannel = self.get_channel(761288869881970718) # test
     
     @property
     async def embed(self):
@@ -45,4 +44,4 @@ class FeMCBot(commands.Bot):
         return embed
 
 bot = FeMCBot()
-bot.run(get_token("atoken"))
+bot.run(get_token("token"))

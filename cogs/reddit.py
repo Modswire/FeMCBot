@@ -13,10 +13,10 @@ if TYPE_CHECKING:
 class RedditCog(commands.Cog):
     def __init__(self, bot: "FeMCBot"):
         self.bot = bot
-        self.dmchannel = bot.get_channel(761288869881970718) # test
-        self.releaseschannel = bot.get_channel(761288869881970718) # test
+        self.dmchannel = None
+        self.releaseschannel = None
         self.releasesignore = []
-        self.ddlcmods = bot.reddit.subreddit("DDLCMods")
+        self.ddlcmods = None
         self.DMLoop.start()
         self.ReleasesLoop.start()
 
@@ -25,9 +25,6 @@ class RedditCog(commands.Cog):
     def cog_unload(self):
         self.DMLoop.cancel()
         self.ReleasesLoop.cancel()
-
-    def msgtypes(self, argument):
-        return argument.lower() if argument.lower() in ["custom", "permission"] else None
     
     @commands.is_owner()
     @commands.group(name="ignore", invoke_without_command=False)
@@ -36,12 +33,12 @@ class RedditCog(commands.Cog):
 
 
     # Commands
-    # @commands.has_any_role(635047784269086740, 667980472164417539)
+    @commands.has_any_role(635047784269086740, 667980472164417539) # Site Moderators and Staff
     @commands.command(aliases=["rdm"])
-    async def redditdm(self, ctx: commands.Context, redditor: RedditorConverter, msgtype: msgtypes):
+    async def redditdm(self, ctx: commands.Context, redditor: RedditorConverter, msgtype = None):
 
         if msgtype is None:
-            return await ctx.send("Run the command again and input correct type ('custom' or 'permission).")
+            return await ctx.send("Run the command again and input correct type (`custom` or `permission`).")
 
         if msgtype == "permission":
             await ctx.send(f"Input u/{redditor.name}'s mod name:", delete_after=60)
@@ -71,12 +68,17 @@ Thanks!
             await self.bot.debugchannel.send("<@321566831670198272> (redditdm)")
             await self.bot.debugchannel.send(e)
             return
-
+        
+        if self.dmchannel is None:
+            # self.dmchannel = self.bot.get_channel(761288869881970718) # test
+            self.dmchannel = self.bot.get_channel(730433832725250088) # actual
         await self.dmchannel.send(embed=e)
         await ctx.send("Done!", delete_after=5)
 
     @ignoregroup.command(name="add")
     async def ignore_add(self, ctx: commands.Context, redditor: RedditorConverter):
+        if redditor.name in self.releasesignore:
+            return await ctx.send("You've already ignored this Redditor!")
         self.releasesignore.append(redditor.name)
         with open("bot-settings/ignore.json", "w") as f:
             json.dump({"ignore": self.releasesignore}, f)
@@ -84,6 +86,8 @@ Thanks!
 
     @ignoregroup.command(name="remove")
     async def ignore_remove(self, ctx: commands.Context, redditor: RedditorConverter):
+        if not redditor.name in self.releasesignore:
+            return await ctx.send("You haven't even ignored this Redditor!")
         self.releasesignore.remove(redditor.name)
         with open("bot-settings/ignore.json", "w") as f:
             json.dump({"ignore": self.releasesignore}, f)
@@ -93,6 +97,10 @@ Thanks!
     # Streams
     @tasks.loop(count=1, loop=set_event_loop(new_event_loop()))
     async def ReleasesLoop(self):
+        self.ddlcmods = await self.bot.reddit.subreddit("DDLCMods")
+        if self.releaseschannel is None:
+            # self.releaseschannel = self.bot.get_channel(761288869881970718) # test
+            self.releaseschannel = self.bot.get_channel(680041658922041425) # actual
         async for submission in self.ddlcmods.new.stream(skip_existing=True):
             try:
                 if not submission.link_flair_text in ["Full Release", "Demo Release"]:
@@ -109,7 +117,9 @@ Thanks!
     @tasks.loop(count=1, loop=set_event_loop(new_event_loop()))
     async def DMLoop(self):
         femcbot = await self.bot.reddit.user.me()
-
+        if self.dmchannel is None:
+            # self.dmchannel = self.bot.get_channel(761288869881970718) # test
+            self.dmchannel = self.bot.get_channel(730433832725250088) # actual
         async for message in femcbot.unread.stream(skip_existing=True):
             try:
                 e = await self.bot.embed

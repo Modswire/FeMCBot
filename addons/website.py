@@ -1,11 +1,15 @@
 import asyncio
 import aiohttp
 import apraw
-from addons.func import get_token
 from discord import Embed, Colour
 from discord.ext import commands
 from json import load, dump
 from datetime import datetime
+
+def get_token(token):
+    with open("bot-settings/token.json", "r") as f:
+        data = load(f)
+    return data[token]
 
 def get_reddit_login():
     with open("bot-settings/reddit.json", "r") as f:
