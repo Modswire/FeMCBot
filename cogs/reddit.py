@@ -17,8 +17,7 @@ class RedditCog(commands.Cog):
         self.releaseschannel = None
         self.releasesignore = []
         self.ddlcmods = None
-        self.DMLoop.start()
-        self.ReleasesLoop.start()
+        self.femcbot = None
 
 
     # Helpers
@@ -92,12 +91,31 @@ Thanks!
         with open("bot-settings/ignore.json", "w") as f:
             json.dump({"ignore": self.releasesignore}, f)
         await ctx.send(f"Done! u/{redditor.name} isn't ignored now!")
+    
+    @commands.is_owner()
+    @commands.command()
+    async def setreddit(self, ctx: commands.Context):
+        if not self.ReleasesLoop.is_running():
+            self.ddlcmods = await self.bot.reddit.subreddit("DDLCMods")
+            self.ReleasesLoop.start()
+            await ctx.send("Subreddit: Should be done now!")
+        else:
+            if self.ddlcmods is None:
+                await ctx.send("The subreddit loop is already running, but subreddit is not loaded. Reload the cog and try again.")
+            else:
+                await ctx.send("The subreddit loop is already running, everything is okay. I think so.")
+        if not self.DMLoop.is_running():
+            self.femcbot = await self.bot.reddit.user.me()
+            self.DMLoop.start()
+            await ctx.send("DM: Should be done now!")
+        else:
+            await ctx.send("The DM loop is already running.")
+
 
 
     # Streams
     @tasks.loop(count=1, loop=set_event_loop(new_event_loop()))
     async def ReleasesLoop(self):
-        self.ddlcmods = await self.bot.reddit.subreddit("DDLCMods")
         if self.releaseschannel is None:
             # self.releaseschannel = self.bot.get_channel(761288869881970718) # test
             self.releaseschannel = self.bot.get_channel(680041658922041425) # actual
@@ -116,11 +134,10 @@ Thanks!
 
     @tasks.loop(count=1, loop=set_event_loop(new_event_loop()))
     async def DMLoop(self):
-        femcbot = await self.bot.reddit.user.me()
         if self.dmchannel is None:
             # self.dmchannel = self.bot.get_channel(761288869881970718) # test
             self.dmchannel = self.bot.get_channel(730433832725250088) # actual
-        async for message in femcbot.unread.stream(skip_existing=True):
+        async for message in self.femcbot.unread.stream(skip_existing=True):
             try:
                 e = await self.bot.embed
                 name = (await message.author()).name
