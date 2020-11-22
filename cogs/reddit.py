@@ -159,7 +159,6 @@ Thanks!
         else:
             await self.bot.debugchannel.send("<@321566831670198272> (command error)")
             await self.bot.debugchannel.send(exception)
-            await self.bot.debugchannel.send(f"{ctx.author.mention}: {ctx.content}")
 
 def setup(bot: "FeMCBot"):
     bot.add_cog(RedditCog(bot))
