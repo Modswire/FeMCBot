@@ -118,7 +118,7 @@ Thanks!
     async def ReleasesLoop(self):
         if self.releaseschannel is None:
             # self.releaseschannel = self.bot.get_channel(761288869881970718) # test
-            self.releaseschannel = self.bot.get_channel(680041658922041425) # actual
+            self.releaseschannel = self.bot.get_channel(682515108496408615) # actual
         async for submission in self.ddlcmods.new.stream(skip_existing=True):
             try:
                 if not submission.link_flair_text in ["Full Release", "Demo Release"]:
