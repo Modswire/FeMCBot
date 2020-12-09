@@ -126,7 +126,8 @@ Thanks!
             self.releaseschannel = self.bot.get_channel(682515108496408615)  # actual
         async for submission in self.ddlcmods.new.stream(skip_existing=True):
             try:
-                if submission.link_flair_text not in ["Full Release", "Demo Release"]:
+                if submission.link_flair_text not in ["Full Release",
+                                                      "Demo Release"]:
                     continue
                 author = await submission.author()
                 if author.name in self.releasesignore:
