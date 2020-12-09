@@ -34,20 +34,20 @@ class WebsiteCog(commands.Cog):
     async def ModCheckingLoop(self):
         if self.channel is None:
             # self.channel = bot.get_channel(761288869881970718) # test
-            self.channel = self.bot.get_channel(680041658922041425) # actual
+            self.channel = self.bot.get_channel(680041658922041425)  # actual
         modlist = await get_mod("mod/", headers=self.headers)
         if self._mod_list == []:
             ids = json.load(open("bot-settings/modlist.json", "r"))["ids"]
             self._mod_list = [i for i in modlist if i["modID"] in ids]
         if modlist != self._mod_list:
-            result = [i for i in modlist if not i in self._mod_list]
+            result = [i for i in modlist if i not in self._mod_list]
             for i in result:
                 await self.channel.send(embed=(await self.collect_embed(i)))
-                await sleep(5) # so I would have chance to shutdown the bot if it'll start spamming the mods
+                await sleep(5)  # so I would have chance to shutdown the bot if it'll start spamming the mods
             self._mod_list = modlist
         if not self.SaveCurrent.is_running():
             self.SaveCurrent.start()
-    
+
     @tasks.loop(hours=1)
     async def SaveCurrent(self):
         idlist = []
@@ -59,12 +59,12 @@ class WebsiteCog(commands.Cog):
         e = await self.bot.embed
         e.add_field(name="Mod Name", value=mod["modName"])
         e.add_field(name="Status", value=mod["modStatus"])
-        e.add_field(name="Release Date",value=str(mod["modDate"][:10]))
+        e.add_field(name="Release Date", value=str(mod["modDate"][:10]))
         e.add_field(name="Short Description", value=mod["modShortDescription"], inline=False)
-        e.add_field(name="Playtime",value="{0} hours {1} minutes".format(mod["modPlayTimeHours"], mod["modPlayTimeMinutes"]))
+        e.add_field(name="Playtime", value="{0} hours {1} minutes".format(mod["modPlayTimeHours"], mod["modPlayTimeMinutes"]))
         e.add_field(name="Rating", value=str(mod["modRating"]))
         e.add_field(name="Is NSFW?", value="Yes" if mod["modNSFW"] else "No")
-        e.add_field(name="Link",value="[Click](https://www.dokidokimodclub.com/mod/{}/)".format(mod["modID"]))
+        e.add_field(name="Link", value="[Click](https://www.dokidokimodclub.com/mod/{}/)".format(mod["modID"]))
         e.set_footer(text="Powered by dokidokimodclub.com's API")
         return e
 
