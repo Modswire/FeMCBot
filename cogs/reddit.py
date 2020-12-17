@@ -108,6 +108,7 @@ Thanks!
     async def setreddit(self, ctx: commands.Context):
         if not self.ReleasesLoop.is_running():
             self.ddlcmods = await self.bot.reddit.subreddit("DDLCMods")
+            self.releasesignore = json.load(open("bot-settings/ignore.json"))["ignore"]
             self.ReleasesLoop.start()
             await ctx.send("Subreddit: Should be done now!")
         else:
