@@ -98,6 +98,10 @@ Thanks!
         with open("bot-settings/ignore.json", "w") as f:
             json.dump({"ignore": self.releasesignore}, f)
         await ctx.send(f"Done! u/{redditor.name} isn't ignored now!")
+    
+    @ignoregroup.command("list")
+    async def ignore_list(self, ctx: commands.Context):
+        await ctx.send(", ".join(self.releasesignore))
 
     @commands.is_owner()
     @commands.command()
