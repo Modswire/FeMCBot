@@ -5,6 +5,6 @@
 },
 "copyright": {
     "subject": "Copyright problems with your dokidokimodclub.com submission",
-    "message": "Hi u/{0}!\nI'm a bot from https://www.dokidokimodclub.com. \nWhen our moderators checked your mod submission, **{1}**, they found one or several issues, listed here:\n{2}\nIf you have any questions or you fixed all of those issues, you can contact the approver though Discord: {3}. \nThanks for using our website!"
+    "message": "Hi u/{0}!\nI'm a bot from https://www.dokidokimodclub.com. \nWhen our moderators checked your mod submission, **{1}**, they found one or several issues, listed here:\n\n{2}\n\nIf you have any questions or you fixed all of those issues, you can contact the approver though Discord: {3}. \nThanks for using our website!"
 }
 }

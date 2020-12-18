@@ -39,7 +39,7 @@ class RedditCog(commands.Cog):
                        redditor: RedditorConverter, msgtype=None):
 
         if self.templates == {}:
-            self.templates = json.load(open("templates.json"))
+            self.templates = json.load(open("cogs/templates.json"))
 
         if msgtype is None:
             return await ctx.send(
@@ -59,7 +59,7 @@ class RedditCog(commands.Cog):
                            delete_after=60)
             ModName = await botinput(self.bot, ctx, str)
             await ctx.send("Input the issues you found:")
-            issues = await botinput(self.bot, ctx, str)
+            issues = (await botinput(self.bot, ctx, str)).replace("\n", "\n\n")
             subject = self.templates["copyright"]["subject"]
             message = self.templates["copyright"]["message"].format(
                 redditor.name, ModName, issues,
