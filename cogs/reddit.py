@@ -2,8 +2,8 @@ import discord
 import apraw
 import json
 from discord.ext import commands, tasks
-from asyncio import sleep, new_event_loop, set_event_loop
-from addons.website import reddit_check, RedditorConverter
+from asyncio import new_event_loop, set_event_loop
+from addons.website import RedditorConverter
 from addons.botinput import botinput
 
 from typing import TYPE_CHECKING
@@ -19,6 +19,7 @@ class RedditCog(commands.Cog):
         self.releasesignore = []
         self.ddlcmods = None
         self.femcbot = None
+        self.templates = {}
 
     # Helpers
     def cog_unload(self):
@@ -37,28 +38,43 @@ class RedditCog(commands.Cog):
     async def redditdm(self, ctx: commands.Context,
                        redditor: RedditorConverter, msgtype=None):
 
+        if self.templates == {}:
+            self.templates = json.load(open("templates.json"))
+
         if msgtype is None:
             return await ctx.send(
-                "Run the command again and input correct type (`custom` or `permission`)."
+                "Run the command again and input correct type (`custom`, `copyright` or `permission`)."
                 )
 
         if msgtype == "permission":
             await ctx.send(f"Input u/{redditor.name}'s mod name:",
                            delete_after=60)
             ModName = await botinput(self.bot, ctx, str)
-            subject = "Permission for adding your mod to dokidokimodclub.com"
-            message = f"""
-Hi u/{redditor.name}!
-I'm a bot from https://www.dokidokimodclub.com, which is affiliated with r/DDLCMods.
-I am seeking your permission to add your mod, **{ModName}**, to the above website. If you would like to have full control over how the mod is configured on the website, you can sign up and submit the mod yourself or let a moderator submit it and request ownership.
-Thanks!
-            """
+            subject = self.templates["permission"]["subject"]
+            message = self.templates["permission"]["message"].format(
+                redditor.name, ModName)
+
+        elif msgtype == "copyright":
+            await ctx.send(f"Input u/{redditor.name}'s mod name:",
+                           delete_after=60)
+            ModName = await botinput(self.bot, ctx, str)
+            await ctx.send("Input the issues you found:")
+            issues = await botinput(self.bot, ctx, str)
+            subject = self.templates["copyright"]["subject"]
+            message = self.templates["copyright"]["message"].format(
+                redditor.name, ModName, issues,
+                f"{ctx.author.name}#{ctx.author.discriminator}")
 
         elif msgtype == "custom":
             await ctx.send("Input message's subject:", delete_after=60)
             subject = await botinput(self.bot, ctx, str)
             await ctx.send("Input message itself:", delete_after=60)
             message = await botinput(self.bot, ctx, str)
+
+        else:
+            return await ctx.send(
+                "Run the command again and input correct type (`custom`, `copyright` or `permission`)."
+                )
 
         e = await self.bot.embed
         e.set_author(name="To u/"+redditor.name,

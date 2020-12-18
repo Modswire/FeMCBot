@@ -1,0 +1,10 @@
+{
+"permission": {
+    "subject": "Permission for adding your mod to dokidokimodclub.com",
+    "message": "Hi u/{0}!\nI'm a bot from https://www.dokidokimodclub.com, which is affiliated with r/DDLCMods.\nI am seeking your permission to add your mod, **{1}**, to the above website. If you would like to have full control over how the mod is configured on the website, you can sign up and submit the mod yourself or let a moderator submit it and request ownership.\nThanks!"
+},
+"copyright": {
+    "subject": "Copyright problems with your dokidokimodclub.com submission",
+    "message": "Hi u/{0}!\nI'm a bot from https://www.dokidokimodclub.com. \nWhen our moderators checked your mod submission, **{1}**, they found one or several issues, listed here:\n{2}\nIf you have any questions or you fixed all of those issues, you can contact the approver though Discord: {3}. \nThanks for using our website!"
+}
+}
