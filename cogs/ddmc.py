@@ -54,8 +54,10 @@ class WebsiteCog(commands.Cog):
     @tasks.loop(hours=1)
     async def ModCheckingLoop(self):
         if self.channel is None:
-            # self.channel = self.bot.get_channel(761288869881970718)  # test
-            self.channel = self.bot.get_channel(680041658922041425)  # actual
+            if self.bot.DEBUG:
+                self.channel = self.bot.get_channel(761288869881970718)
+            else:
+                self.channel = self.bot.get_channel(680041658922041425)
         modlist = await get_mod("mod/", headers=self.headers)
         if self._mod_list == []:
             ids = json.load(open("bot-settings/modlist.json", "r"))["ids"]
@@ -73,7 +75,7 @@ class WebsiteCog(commands.Cog):
                         mm = ModMenu(i, await self.collect_embed(i))
                         await mm.start(ctx=self._ctx, channel=self.bot.debugchannel)
                     except Exception as e:
-                        await self._ctx.send(e)
+                        await self.bot.debugchannel.send(e)
         if not self.SaveCurrent.is_running():
             self.SaveCurrent.start()
 
