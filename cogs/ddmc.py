@@ -70,7 +70,7 @@ class WebsiteCog(commands.Cog):
             if diff:
                 for i in diff:
                     try:
-                        mm = ModMenu()
+                        mm = ModMenu(i, await self.collect_embed(i))
                         await mm.start(ctx=self._ctx, channel=self.bot.debugchannel)
                     except Exception as e:
                         await self._ctx.send(e)
