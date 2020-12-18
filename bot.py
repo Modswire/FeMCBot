@@ -12,8 +12,9 @@ class FeMCBot(commands.Bot):
         intents = discord.Intents.none()
         intents.guilds = True
         intents.messages = True
-        intents.members = True
+        intents.members = True  # comment on test
         intents.bans = True
+        intents.reactions = True
 
         # Getting bot info
         # Bot owners
@@ -44,7 +45,7 @@ class FeMCBot(commands.Bot):
 
         # Some channels needed
         self.debugchannel = self.get_channel(635546287420342362)  # FeMC
-        # self.debugchannel = self.get_channel(761288869881970718) # test
+        # self.debugchannel = self.get_channel(761288869881970718)  # test
 
     @property
     async def embed(self):
