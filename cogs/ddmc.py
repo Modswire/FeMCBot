@@ -54,8 +54,8 @@ class WebsiteCog(commands.Cog):
     @tasks.loop(hours=1)
     async def ModCheckingLoop(self):
         if self.channel is None:
-            self.channel = self.bot.get_channel(761288869881970718)  # test
-            # self.channel = self.bot.get_channel(680041658922041425)  # actual
+            # self.channel = self.bot.get_channel(761288869881970718)  # test
+            self.channel = self.bot.get_channel(680041658922041425)  # actual
         modlist = await get_mod("mod/", headers=self.headers)
         if self._mod_list == []:
             ids = json.load(open("bot-settings/modlist.json", "r"))["ids"]
