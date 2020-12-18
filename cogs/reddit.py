@@ -90,8 +90,10 @@ class RedditCog(commands.Cog):
             return
 
         if self.dmchannel is None:
-            # self.dmchannel = self.bot.get_channel(761288869881970718) # test
-            self.dmchannel = self.bot.get_channel(730433832725250088)  # actual
+            if self.bot.DEBUG:
+                self.dmchannel = self.bot.get_channel(761288869881970718)
+            else:
+                self.dmchannel = self.bot.get_channel(730433832725250088)
         await self.dmchannel.send(embed=e)
         await ctx.send("Done!", delete_after=5)
 
@@ -143,8 +145,10 @@ class RedditCog(commands.Cog):
     @tasks.loop(count=1, loop=set_event_loop(new_event_loop()))
     async def ReleasesLoop(self):
         if self.releaseschannel is None:
-            # self.releaseschannel = self.bot.get_channel(761288869881970718) # test
-            self.releaseschannel = self.bot.get_channel(682515108496408615)  # actual
+            if self.bot.DEBUG:
+                self.releaseschannel = self.bot.get_channel(761288869881970718)
+            else:
+                self.releaseschannel = self.bot.get_channel(682515108496408615)
         async for submission in self.ddlcmods.new.stream(skip_existing=True):
             try:
                 if submission.link_flair_text not in ["Full Release",
@@ -162,8 +166,10 @@ class RedditCog(commands.Cog):
     @tasks.loop(count=1, loop=set_event_loop(new_event_loop()))
     async def DMLoop(self):
         if self.dmchannel is None:
-            # self.dmchannel = self.bot.get_channel(761288869881970718) # test
-            self.dmchannel = self.bot.get_channel(730433832725250088)  # actual
+            if self.bot.DEBUG:
+                self.dmchannel = self.bot.get_channel(761288869881970718)
+            else:
+                self.dmchannel = self.bot.get_channel(730433832725250088)
         async for message in self.femcbot.unread.stream(skip_existing=True):
             try:
                 e = await self.bot.embed
