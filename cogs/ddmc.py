@@ -49,10 +49,10 @@ class WebsiteCog(commands.Cog):
             if len(res) >= 5:
                 # Collecting embeds for paginating
                 temp_modlist = [await self.collect_embed(r) for r in res]
-                menu = ModMenuPages(ModPageSource(temp_modlist,
-                                                  per_page=1),
-                                    res, msg="Too many mods in new response:",
-                                    resend=True)
+                menu = ModMenuPages(
+                    ModPageSource(temp_modlist, per_page=1),
+                    res, msg="Too many mods in new response:",
+                    resend=True)
                 await menu.start(
                     ctx=self._ctx,
                     channel=self.bot.debugchannel)
@@ -67,8 +67,8 @@ class WebsiteCog(commands.Cog):
             if diff:
                 # Collecting embeds for paginating
                 temp_modlist = [await self.collect_embed(d) for d in diff]
-                menu = ModMenuPages(ModPageSource(temp_modlist,
-                                                  per_page=1), diff)
+                menu = ModMenuPages(
+                    ModPageSource(temp_modlist, per_page=1), diff)
                 await menu.start(
                     ctx=self._ctx,
                     channel=self.bot.debugchannel)
