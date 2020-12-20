@@ -1,5 +1,3 @@
-import discord
-import apraw
 import json
 from discord.ext import commands, tasks
 from asyncio import new_event_loop, set_event_loop
@@ -26,9 +24,11 @@ class RedditCog(commands.Cog):
         self.DMLoop.cancel()
         self.ReleasesLoop.cancel()
 
-    @commands.is_owner()
     @commands.group(name="ignore", invoke_without_command=False)
     async def ignoregroup(self, ctx: commands.Context):
+        """
+        Commands for managing the ignore list.
+        """
         pass
 
     # Commands
@@ -37,14 +37,16 @@ class RedditCog(commands.Cog):
     @commands.command(aliases=["rdm"])
     async def redditdm(self, ctx: commands.Context,
                        redditor: RedditorConverter, msgtype=None):
+        """
+        Allows DMing to Reddit users using u/FeMCBot account.
+        Accessible only to Site Moderators and Staff members.
+        redditor argument should be a nickname of Reddit user.
+        msgtype argument can be `custom`, `copyright` or `permission`.
+        """
 
+        # Loading templates if they weren't loaded
         if self.templates == {}:
             self.templates = json.load(open("cogs/templates.json"))
-
-        if msgtype is None:
-            return await ctx.send(
-                "Run the command again and input correct type (`custom`, `copyright` or `permission`)."
-                )
 
         if msgtype == "permission":
             await ctx.send(f"Input u/{redditor.name}'s mod name:",
@@ -76,11 +78,13 @@ class RedditCog(commands.Cog):
                 "Run the command again and input correct type (`custom`, `copyright` or `permission`)."
                 )
 
+        # Collecting the embed for DM log channel
         e = await self.bot.embed
         e.set_author(name="To u/"+redditor.name,
                      url="https://reddit.com/u/"+redditor.name)
         e.add_field(name=subject, value=message)
 
+        # Checking if we can DM the user
         try:
             await redditor.message(subject=subject, text=message)
         except Exception as e:
@@ -97,9 +101,15 @@ class RedditCog(commands.Cog):
         await self.dmchannel.send(embed=e)
         await ctx.send("Done!", delete_after=5)
 
+    @commands.is_owner()
     @ignoregroup.command(name="add")
     async def ignore_add(self, ctx: commands.Context,
                          redditor: RedditorConverter):
+        """
+        Adds a Redditor to ignore list.
+        Accessible only to Bot Owners.
+        redditor argument should be a nickname of Reddit user.
+        """
         if redditor.name in self.releasesignore:
             return await ctx.send("You've already ignored this Redditor!")
         self.releasesignore.append(redditor.name)
@@ -107,9 +117,15 @@ class RedditCog(commands.Cog):
             json.dump({"ignore": self.releasesignore}, f)
         await ctx.send(f"Done! u/{redditor.name} is ignored now!")
 
+    @commands.is_owner()
     @ignoregroup.command(name="remove")
     async def ignore_remove(self, ctx: commands.Context,
                             redditor: RedditorConverter):
+        """
+        Removes a Redditor from ignore list.
+        Accessible only to Bot Owners.
+        redditor argument should be a nickname of Reddit user.
+        """
         if redditor.name not in self.releasesignore:
             return await ctx.send("You haven't even ignored this Redditor!")
         self.releasesignore.remove(redditor.name)
@@ -117,13 +133,23 @@ class RedditCog(commands.Cog):
             json.dump({"ignore": self.releasesignore}, f)
         await ctx.send(f"Done! u/{redditor.name} isn't ignored now!")
 
+    @commands.has_role(667980472164417539)
     @ignoregroup.command("list")
     async def ignore_list(self, ctx: commands.Context):
+        """
+        Shows the ignore list.
+        Accessible only to Staff members.
+        redditor argument should be a nickname of Reddit user.
+        """
         await ctx.send(", ".join(self.releasesignore))
 
     @commands.is_owner()
     @commands.command()
     async def setreddit(self, ctx: commands.Context):
+        """
+        Updates all the variables for running new releases and DM loops.
+        Accessible only to Bot Owners.
+        """
         if not self.ReleasesLoop.is_running():
             self.ddlcmods = await self.bot.reddit.subreddit("DDLCMods")
             self.releasesignore = json.load(open("bot-settings/ignore.json"))["ignore"]
