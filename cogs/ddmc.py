@@ -46,7 +46,7 @@ class WebsiteCog(commands.Cog):
             diff = [i for i in self._mod_list if i not in modlist]
 
             # Too many new mods, need manual approval
-            if len(res) >= 5:
+            if len(res) >= 3:
                 # Collecting embeds for paginating
                 temp_modlist = [await self.collect_embed(r) for r in res]
                 menu = ModMenuPages(
