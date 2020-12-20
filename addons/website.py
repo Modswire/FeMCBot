@@ -62,7 +62,7 @@ class ModMenuPages(menus.MenuPages):
             kwargs = await self._get_kwargs_from_page(page)
             await (self.bot.get_cog("WebsiteCog")).channel.send(embed=kwargs["embed"])
 
-    @menus.button('\N{THUMBS DOWN SIGN}')
+    @menus.button('\N{CROSS MARK}')
     async def remove_mod(self, payload):
         if not self.resend:
             await self.message.edit(content="I'm removing the mod from the local copy.")
