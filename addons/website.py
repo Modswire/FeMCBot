@@ -44,7 +44,6 @@ class ModMenuPages(menus.MenuPages):
     def __init__(self, source, mods, msg=None, resend=False, **kwargs):
         self.mods = mods
         self.resend = resend
-        self.timeout = 60.0*60*24
         self.msg = msg or "<@321566831670198272> This mod is in local copy but it isn't in new copy. What to do?"
         super().__init__(source, **kwargs)
 
