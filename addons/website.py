@@ -60,7 +60,7 @@ class ModMenuPages(menus.MenuPages):
             self.bot.get_cog("WebsiteCog")._mod_list.append(self.mods[self.current_page])
             page = await self._source.get_page(self.current_page)
             kwargs = await self._get_kwargs_from_page(page)
-            await (self.bot.get_cog("WebsiteCog")).channel.send(kwargs["embed"])
+            await (self.bot.get_cog("WebsiteCog")).channel.send(embed=kwargs["embed"])
 
     @menus.button('\N{THUMBS DOWN SIGN}')
     async def remove_mod(self, payload):
