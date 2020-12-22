@@ -183,7 +183,11 @@ class RedditCog(commands.Cog):
                 author = await submission.author()
                 if author.name in self.releasesignore:
                     continue
-                text = f"Author: {author.name}\nPost name: {submission.title}\nLink: https://redd.it/{submission.id}"
+                text = f"""
+                Author: {author.name}
+                Post name: {submission.title}
+                Link: https://redd.it/{submission.id}
+                """
                 await self.releaseschannel.send(text)
             except Exception as e:
                 await self.bot.debugchannel.send("<@321566831670198272> (releases loop)")
@@ -215,9 +219,6 @@ class RedditCog(commands.Cog):
         if isinstance(exception, commands.ConversionError):
             if exception.converter == RedditorConverter:
                 return await ctx.send("Redditor was not found. Check the username, is it correct?")
-        else:
-            await self.bot.debugchannel.send("<@321566831670198272> (command error)")
-            await self.bot.debugchannel.send(exception)
 
 
 def setup(bot: "FeMCBot"):

@@ -52,6 +52,13 @@ class MiscCog(commands.Cog):
         e.add_field(name="__Website Info__", value=wi, inline=False)
         await ctx.send(embed=e)
 
+    @commands.has_role(667980472164417539)
+    @commands.command()
+    async def purge(self, ctx: commands.Context, amount: int = 25):
+        await ctx.message.delete()
+        deleted = await ctx.channel.purge(limit=amount)
+        await ctx.send(f"Deleted {len(deleted)} messages.")
+
 
 def setup(bot: "FeMCBot"):
     bot.add_cog(MiscCog(bot))
