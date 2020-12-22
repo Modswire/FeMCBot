@@ -55,6 +55,11 @@ class MiscCog(commands.Cog):
     @commands.has_role(667980472164417539)
     @commands.command()
     async def purge(self, ctx: commands.Context, amount: int = 25):
+        """
+        Remove x messages from the channel.
+        Accessible only to Staff members.
+        amount argument should be amount of messages to remove, default is 25.
+        """
         await ctx.message.delete()
         deleted = await ctx.channel.purge(limit=amount)
         await ctx.send(f"Deleted {len(deleted)} messages.")
