@@ -33,9 +33,9 @@ class MiscCog(commands.Cog):
         ri = f"""
         **Reddit Username:** u/{rfemc.name}
         """
-        e.add_field(name="Bot Info", value=bi)
-        e.add_field(name="Discord Info", value=di)
-        e.add_field(name="Reddit Info", value=ri)
+        e.add_field(name="__Bot Info__", value=bi)
+        e.add_field(name="__Discord Info__", value=di, inline=False)
+        e.add_field(name="__Reddit Info__", value=ri, inline=False)
         await ctx.send(embed=e)
 
 
