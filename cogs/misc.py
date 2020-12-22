@@ -16,16 +16,20 @@ class MiscCog(commands.Cog):
         self.rfemc = None
 
     @commands.command()
-    async def about(self, ctx):
+    async def about(self, ctx: commands.Context):
+        "Shows up the information about the bot."
+
         e = await self.bot.embed
         femc = self.bot
+        uptime = datetime.now() - femc.starttime
         if not self.rfemc:
             self.rfemc = await femc.reddit.user.me()
+        website = femc.get_cog("WebsiteCog")
 
         bi = f"""
         **Bot Owners:** {", ".join([i.mention for i in femc.owners])}
 
-        **Uptime:** {humanize.naturaltime(datetime.now() - femc.starttime)}
+        **Uptime:** Started up {humanize.naturaltime(uptime)}
         **Python version:** {sys.version}
         **discord.py version:** enhanced-dpy {package_version("enhanced-dpy")}
         **aPRAW version:** {package_version("apraw")}
@@ -36,12 +40,16 @@ class MiscCog(commands.Cog):
         **Discord ID:** {femc.user.id}
         """
 
-        ri = f"""
-        **Reddit Username:** u/{self.rfemc.name}
+        ri = f"**Reddit Username:** u/{self.rfemc.name}"
+
+        wi = f"""
+        **Amount of mods saved in local copy:** {len(website._mod_list)}
         """
+
         e.add_field(name="__Bot Info__", value=bi)
         e.add_field(name="__Discord Info__", value=di, inline=False)
         e.add_field(name="__Reddit Info__", value=ri, inline=False)
+        e.add_field(name="__Website Info__", value=wi, inline=False)
         await ctx.send(embed=e)
 
 
