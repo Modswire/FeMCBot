@@ -17,6 +17,7 @@ class WebsiteCog(commands.Cog):
         self.channel = None
         self.headers = get_headers()
         self._mod_list = []
+        self.ids = set()
 
     def cog_unload(self):
         self.ModCheckingLoop.cancel()
@@ -35,15 +36,16 @@ class WebsiteCog(commands.Cog):
 
         # Oops, bot's list is empty, loading ID list
         if self._mod_list == []:
-            ids = json.load(open("bot-settings/modlist.json", "r"))["ids"]
-            self._mod_list = [i for i in modlist if i["modID"] in ids]
+            self.ids = set(json.load(open("bot-settings/modlist.json", "r"))["ids"])
+            self._mod_list = [i for i in modlist if i["modID"] in self.ids]
 
         # New mods?
         if modlist != self._mod_list:
             # New mods
-            res = [i for i in modlist if i not in self._mod_list]
+            res = [i for i in modlist if i["modID"] not in self.ids]
             # In case if some were removed
-            diff = [i for i in self._mod_list if i not in modlist]
+            modlistids = {i["modID"] for i in modlist}
+            diff = [i for i in self._mod_list if i["modID"] not in modlistids]
 
             # Too many new mods, need manual approval
             if len(res) >= 3:

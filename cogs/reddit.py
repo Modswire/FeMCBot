@@ -103,8 +103,7 @@ class RedditCog(commands.Cog):
 
     @commands.is_owner()
     @ignoregroup.command(name="add")
-    async def ignore_add(self, ctx: commands.Context,
-                         redditor: RedditorConverter):
+    async def ignore_add(self, ctx: commands.Context, redditor: RedditorConverter):
         """
         Adds a Redditor to ignore list.
         Accessible only to Bot Owners.
@@ -119,8 +118,7 @@ class RedditCog(commands.Cog):
 
     @commands.is_owner()
     @ignoregroup.command(name="remove")
-    async def ignore_remove(self, ctx: commands.Context,
-                            redditor: RedditorConverter):
+    async def ignore_remove(self, ctx: commands.Context, redditor: RedditorConverter):
         """
         Removes a Redditor from ignore list.
         Accessible only to Bot Owners.
@@ -177,8 +175,7 @@ class RedditCog(commands.Cog):
                 self.releaseschannel = self.bot.get_channel(682515108496408615)
         async for submission in self.ddlcmods.new.stream(skip_existing=True):
             try:
-                if submission.link_flair_text not in ["Full Release",
-                                                      "Demo Release"]:
+                if submission.link_flair_text not in ["Full Release", "Demo Release"]:
                     continue
                 author = await submission.author()
                 if author.name in self.releasesignore:
