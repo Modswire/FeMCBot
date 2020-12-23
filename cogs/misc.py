@@ -25,6 +25,10 @@ class MiscCog(commands.Cog):
         if not self.rfemc:
             self.rfemc = await femc.reddit.user.me()
         website = femc.get_cog("WebsiteCog")
+        if website is None:
+            websiteinfo = 0
+        else:
+            websiteinfo = len(website._mod_list)
 
         bi = f"""
         **Bot Owners:** {", ".join([i.mention for i in femc.owners])}
@@ -43,7 +47,7 @@ class MiscCog(commands.Cog):
         ri = f"**Reddit Username:** u/{self.rfemc.name}"
 
         wi = f"""
-        **Amount of mods saved in local copy:** {len(website._mod_list)}
+        **Amount of mods saved in local copy:** {websiteinfo}
         """
 
         e.add_field(name="__Bot Info__", value=bi)
@@ -63,6 +67,10 @@ class MiscCog(commands.Cog):
         await ctx.message.delete()
         deleted = await ctx.channel.purge(limit=amount)
         await ctx.send(f"Deleted {len(deleted)} messages.")
+
+    @commands.group(name="todo", invoke_without_command=False)
+    async def todogroup(self, ctx: commands.Context):
+        pass
 
 
 def setup(bot: "FeMCBot"):
