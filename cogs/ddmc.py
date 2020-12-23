@@ -19,8 +19,8 @@ class WebsiteCog(commands.Cog):
         self._mod_list = []
 
     def cog_unload(self):
-        self.ModCheckingLoop.stop()
-        self.SaveCurrent.stop()
+        self.ModCheckingLoop.cancel()
+        self.SaveCurrent.cancel()
 
     @commands.command()
     async def mod(self, ctx: commands.Context):
