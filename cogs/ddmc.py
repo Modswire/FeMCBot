@@ -1,4 +1,5 @@
 import json
+import traceback
 from discord.ext import commands, tasks
 from random import choice
 from asyncio import sleep
@@ -100,6 +101,16 @@ class WebsiteCog(commands.Cog):
         if not self.ModCheckingLoop.is_running():
             self.ModCheckingLoop.start()
         await ctx.send("Done!")
+
+    @ModCheckingLoop.error
+    async def MCL_error(self, error):
+        msg = "There's an error in checking loop: \n```py\n"
+        msg += "".join(traceback.format_exception(
+            type(error), error, error.__traceback__))
+        msg += "\n```"
+        msg += "\n I've cancelled the loop until then."
+        self.ModCheckingLoop.cancel()
+        self.SaveCurrent.cancel()
 
     async def collect_embed(self, mod):
         e = await self.bot.embed
