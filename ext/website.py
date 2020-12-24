@@ -69,3 +69,10 @@ class ModMenuPages(menus.MenuPages):
             self.bot.get_cog("WebsiteCog")._mod_list.remove(self.mods[self.current_page])
         else:
             await self.message.edit(content="I'm ignoring this mod.")
+
+    @menus.button('\N{HUNDRED POINTS SYMBOL}')
+    async def approve_all_silently(self, payload):
+        await self.message.edit(content="I've added everything in the local copy.")
+        for i in self.mods:
+            self.bot.get_cog("WebsiteCog")._mod_list.append(i)
+        self.stop()
