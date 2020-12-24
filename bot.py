@@ -2,7 +2,7 @@ import discord
 import apraw
 from datetime import datetime
 from discord.ext import commands
-from addons.website import get_reddit_login, get_token
+from ext.website import get_reddit_login, get_token
 
 
 class FeMCBot(commands.Bot):

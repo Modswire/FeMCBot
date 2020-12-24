@@ -3,7 +3,7 @@ import traceback
 from discord.ext import commands, tasks
 from random import choice
 from asyncio import sleep
-from addons.website import get_headers, get_mod, ModMenuPages, ModPageSource
+from ext.website import get_headers, get_mod, ModMenuPages, ModPageSource
 
 from typing import TYPE_CHECKING
 

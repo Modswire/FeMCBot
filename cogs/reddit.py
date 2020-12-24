@@ -2,8 +2,8 @@ import json
 import traceback
 from discord.ext import commands, tasks
 from asyncio import new_event_loop, set_event_loop
-from addons.website import RedditorConverter
-from addons.botinput import botinput
+from ext.website import RedditorConverter
+from ext.botinput import botinput
 
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
@@ -198,7 +198,7 @@ Link: https://redd.it/{submission.id}
             e = await self.bot.embed
             name = (await message.author()).name
             e.set_author(name="From u/"+name,
-                            url="https://reddit.com/u/"+name)
+                         url="https://reddit.com/u/"+name)
             e.add_field(name=message.subject, value=message.body)
             e.set_footer(text="Message ID: "+str(message.id))
             await self.dmchannel.send(embed=e)
