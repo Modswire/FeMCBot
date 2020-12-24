@@ -181,9 +181,9 @@ class RedditCog(commands.Cog):
                 if author.name in self.releasesignore:
                     continue
                 text = f"""
-                Author: {author.name}
-                Post name: {submission.title}
-                Link: https://redd.it/{submission.id}
+Author: {author.name}
+Post name: {submission.title}
+Link: https://redd.it/{submission.id}
                 """
                 await self.releaseschannel.send(text)
             except Exception as e:
