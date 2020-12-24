@@ -114,6 +114,16 @@ class WebsiteCog(commands.Cog):
         self.SaveCurrent.cancel()
         await self.bot.debugchannel.send(msg)
 
+    @SaveCurrent.error
+    async def SC_error(self, error):
+        msg = "There's an error in saving loop: \n```py\n"
+        msg += "".join(traceback.format_exception(
+            type(error), error, error.__traceback__))
+        msg += "\n```"
+        msg += "\n I've cancelled the loop until then."
+        self.SaveCurrent.cancel()
+        await self.bot.debugchannel.send(msg)
+
     async def collect_embed(self, mod):
         e = await self.bot.embed
         e.add_field(name="Mod Name", value=mod["modName"])
