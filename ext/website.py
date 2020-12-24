@@ -75,4 +75,5 @@ class ModMenuPages(menus.MenuPages):
         await self.message.edit(content="I've added everything in the local copy.")
         for i in self.mods:
             self.bot.get_cog("WebsiteCog")._mod_list.append(i)
+            self.bot.get_cog("WebsiteCog").ids.append(i["modID"])
         self.stop()
