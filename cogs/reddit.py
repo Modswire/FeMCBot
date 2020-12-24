@@ -1,4 +1,5 @@
 import json
+import traceback
 from discord.ext import commands, tasks
 from asyncio import new_event_loop, set_event_loop
 from addons.website import RedditorConverter
@@ -174,21 +175,17 @@ class RedditCog(commands.Cog):
             else:
                 self.releaseschannel = self.bot.get_channel(682515108496408615)
         async for submission in self.ddlcmods.new.stream(skip_existing=True):
-            try:
-                if submission.link_flair_text not in ["Full Release", "Demo Release"]:
-                    continue
-                author = await submission.author()
-                if author.name in self.releasesignore:
-                    continue
-                text = f"""
+            if submission.link_flair_text not in ["Full Release", "Demo Release"]:
+                continue
+            author = await submission.author()
+            if author.name in self.releasesignore:
+                continue
+            text = f"""
 Author: {author.name}
 Post name: {submission.title}
 Link: https://redd.it/{submission.id}
-                """
-                await self.releaseschannel.send(text)
-            except Exception as e:
-                await self.bot.debugchannel.send("<@321566831670198272> (releases loop)")
-                await self.bot.debugchannel.send(e)
+            """
+            await self.releaseschannel.send(text)
 
     @tasks.loop(count=1, loop=set_event_loop(new_event_loop()))
     async def DMLoop(self):
@@ -216,6 +213,26 @@ Link: https://redd.it/{submission.id}
         if isinstance(exception, commands.ConversionError):
             if exception.converter == RedditorConverter:
                 return await ctx.send("Redditor was not found. Check the username, is it correct?")
+
+    @ReleasesLoop.error
+    async def RL_error(self, error):
+        msg = "There's an error in releases loop: \n```py\n"
+        msg += "".join(traceback.format_exception(
+            type(error), error, error.__traceback__))
+        msg += "\n```"
+        msg += "\n I've cancelled the loop until then."
+        self.ReleasesLoop.cancel()
+        await self.bot.debugchannel.send(msg)
+
+    @DMLoop.error
+    async def DM_error(self, error):
+        msg = "There's an error in DM loop: \n```py\n"
+        msg += "".join(traceback.format_exception(
+            type(error), error, error.__traceback__))
+        msg += "\n```"
+        msg += "\n I've cancelled the loop until then."
+        self.DMLoop.cancel()
+        await self.bot.debugchannel.send(msg)
 
 
 def setup(bot: "FeMCBot"):
