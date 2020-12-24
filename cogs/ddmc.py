@@ -83,7 +83,7 @@ class WebsiteCog(commands.Cog):
 
     @tasks.loop(hours=1)
     async def SaveCurrent(self):
-        json.dump({"ids": self.ids}, open("bot-settings/modlist.json", "w"))
+        json.dump({"ids": list(self.ids)}, open("bot-settings/modlist.json", "w"))
 
     @commands.is_owner()
     @commands.command()
