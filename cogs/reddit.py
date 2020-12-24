@@ -195,17 +195,13 @@ Link: https://redd.it/{submission.id}
             else:
                 self.dmchannel = self.bot.get_channel(730433832725250088)
         async for message in self.femcbot.unread.stream(skip_existing=True):
-            try:
-                e = await self.bot.embed
-                name = (await message.author()).name
-                e.set_author(name="From u/"+name,
-                             url="https://reddit.com/u/"+name)
-                e.add_field(name=message.subject, value=message.body)
-                e.set_footer(text="Message ID: "+str(message.id))
-                await self.dmchannel.send(embed=e)
-            except Exception as e:
-                await self.bot.debugchannel.send("<@321566831670198272> (DM loop)")
-                await self.bot.debugchannel.send(e)
+            e = await self.bot.embed
+            name = (await message.author()).name
+            e.set_author(name="From u/"+name,
+                            url="https://reddit.com/u/"+name)
+            e.add_field(name=message.subject, value=message.body)
+            e.set_footer(text="Message ID: "+str(message.id))
+            await self.dmchannel.send(embed=e)
 
     # Listeners
     @commands.Cog.listener()
