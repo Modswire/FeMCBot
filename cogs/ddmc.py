@@ -111,6 +111,7 @@ class WebsiteCog(commands.Cog):
         msg += "\n I've cancelled the loop until then."
         self.ModCheckingLoop.cancel()
         self.SaveCurrent.cancel()
+        await self.bot.debugchannel.send(msg)
 
     async def collect_embed(self, mod):
         e = await self.bot.embed
