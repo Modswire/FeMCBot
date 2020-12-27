@@ -25,29 +25,43 @@ class MiscCog(commands.Cog):
         if not self.rfemc:
             self.rfemc = await femc.reddit.user.me()
         website = femc.get_cog("WebsiteCog")
+        reddit = femc.get_cog("RedditCog")
         if website is None:
             websiteinfo = 0
+            MCLoop = False
         else:
             websiteinfo = len(website._mod_list)
+            MCLoop = website.ModCheckingLoop.is_running()
+        if reddit is None:
+            DMLoop = False
+            NMLoop = False
+        else:
+            DMLoop = reddit.DMLoop.is_running()
+            NMLoop = reddit.ReleasesLoop.is_running()
 
         bi = f"""
-        **Bot Owners:** {", ".join([i.mention for i in femc.owners])}
+**Bot Owners:** {", ".join([i.mention for i in femc.owners])}
 
-        **Uptime:** Started up {humanize.naturaltime(uptime)}
-        **Python version:** {sys.version}
-        **discord.py version:** enhanced-dpy {package_version("enhanced-dpy")}
-        **aPRAW version:** {package_version("apraw")}
+**Uptime:** Started up {humanize.naturaltime(uptime)}
+**Python version:** {sys.version}
+**discord.py version:** enhanced-dpy {package_version("enhanced-dpy")}
+**aPRAW version:** {package_version("apraw")}
         """
 
         di = f"""
-        **Discord Username:** {femc.user.name}#{femc.user.discriminator}
-        **Discord ID:** {femc.user.id}
+**Discord Username:** {femc.user.name}#{femc.user.discriminator}
+**Discord ID:** {femc.user.id}
         """
 
-        ri = f"**Reddit Username:** u/{self.rfemc.name}"
+        ri = f"""
+**Reddit Username:** u/{self.rfemc.name}
+**Is the DM loop running?:** {DMLoop}
+**Is the releases loop running?:** {NMLoop}
+        """
 
         wi = f"""
-        **Amount of mods saved in local copy:** {websiteinfo}
+**Amount of mods saved in local copy:** {websiteinfo}
+**Is the new mods loop running?:** {MCLoop}
         """
 
         e.add_field(name="__Bot Info__", value=bi)
