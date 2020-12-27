@@ -72,6 +72,18 @@ class MiscCog(commands.Cog):
     async def todogroup(self, ctx: commands.Context):
         pass
 
+    @todogroup.command(name="list")
+    async def todo_list(self, ctx: commands.Context):
+        pass
+
+    @todogroup.command(name="add")
+    async def todo_add(self, ctx: commands.Context, number: int):
+        pass
+
+    @todogroup.command(name="remove")
+    async def todo_remove(self, ctx: commands.Context, number: int):
+        pass
+
 
 def setup(bot: "FeMCBot"):
     bot.add_cog(MiscCog(bot))
