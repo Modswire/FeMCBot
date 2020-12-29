@@ -64,7 +64,7 @@ class WebsiteCog(commands.Cog):
                 for i in res:
                     await self.channel.send(embed=await self.collect_embed(i))
                     self._mod_list.append(i)
-                    self.ids.append(i["modID"])
+                    self.ids.add(i["modID"])
                     await sleep(5)
 
             # There are some deleted mods, manual check

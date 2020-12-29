@@ -1,5 +1,6 @@
 import discord
 import apraw
+import aiosqlite
 from datetime import datetime
 from discord.ext import commands
 from ext.website import get_reddit_login, get_token
@@ -8,7 +9,7 @@ from ext.website import get_reddit_login, get_token
 class FeMCBot(commands.Bot):
     def __init__(self):
 
-        self.DEBUG = False
+        self.DEBUG = True
 
         # Getting the intents to pass
         intents = discord.Intents.none()
@@ -20,6 +21,7 @@ class FeMCBot(commands.Bot):
         intents.reactions = True
 
         # Getting bot info
+        self.db = None
         # Bot owners
         self.owner_ids = [
             321566831670198272,
@@ -56,6 +58,8 @@ class FeMCBot(commands.Bot):
             self.debugchannel = self.get_channel(635546287420342362)  # FeMC
         else:
             self.debugchannel = self.get_channel(761288869881970718)  # test
+        if not self.db:
+            self.db = await aiosqlite.connect("bot-settings/femc.db")
 
     @property
     async def embed(self):
