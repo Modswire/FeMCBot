@@ -204,7 +204,6 @@ Link: https://redd.it/{submission.id}
             await self.dmchannel.send(embed=e)
 
     # Listeners
-    @commands.Cog.listener()
     async def cog_command_error(self, ctx: commands.Context,
                                 exception: Exception):
         if isinstance(exception, commands.ConversionError):
