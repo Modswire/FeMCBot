@@ -13,14 +13,29 @@ if TYPE_CHECKING:
 class RedditCog(commands.Cog):
     def __init__(self, bot: "FeMCBot"):
         self.bot = bot
-        self.dmchannel = None
-        self.releaseschannel = None
-        self.releasesignore = []
-        self.ddlcmods = None
-        self.femcbot = None
         self.templates = {}
+        bot.loop.create_task(self.ainit())
 
     # Helpers
+    async def ainit(self):
+        await self.bot.wait_until_ready()
+
+        if self.bot.DEBUG:
+            self.dmchannel = self.bot.get_channel(761288869881970718)
+            self.releaseschannel = self.bot.get_channel(761288869881970718)
+        else:
+            self.dmchannel = self.bot.get_channel(730433832725250088)
+            self.releaseschannel = self.bot.get_channel(682515108496408615)
+
+        self.ddlcmods = await self.bot.reddit.subreddit("DDLCMods")
+        self.femcbot = await self.bot.reddit.user.me()
+
+        self.releasesignore = json.load(open("bot-settings/ignore.json"))["ignore"]
+        self.templates = json.load(open("cogs/templates.json"))
+
+        self.DMLoop.start()
+        self.ReleasesLoop.start()
+
     def cog_unload(self):
         self.DMLoop.cancel()
         self.ReleasesLoop.cancel()
@@ -44,10 +59,6 @@ class RedditCog(commands.Cog):
         redditor argument should be a nickname of Reddit user.
         msgtype argument can be `custom`, `copyright` or `permission`.
         """
-
-        # Loading templates if they weren't loaded
-        if self.templates == {}:
-            self.templates = json.load(open("cogs/templates.json"))
 
         if msgtype == "permission":
             await ctx.send(f"Input u/{redditor.name}'s mod name:",
@@ -94,11 +105,6 @@ class RedditCog(commands.Cog):
             await self.bot.debugchannel.send(e)
             return
 
-        if self.dmchannel is None:
-            if self.bot.DEBUG:
-                self.dmchannel = self.bot.get_channel(761288869881970718)
-            else:
-                self.dmchannel = self.bot.get_channel(730433832725250088)
         await self.dmchannel.send(embed=e)
         await ctx.send("Done!", delete_after=5)
 
@@ -150,8 +156,6 @@ class RedditCog(commands.Cog):
         Accessible only to Bot Owners.
         """
         if not self.ReleasesLoop.is_running():
-            self.ddlcmods = await self.bot.reddit.subreddit("DDLCMods")
-            self.releasesignore = json.load(open("bot-settings/ignore.json"))["ignore"]
             self.ReleasesLoop.start()
             await ctx.send("Subreddit: Should be done now!")
         else:
@@ -160,7 +164,6 @@ class RedditCog(commands.Cog):
             else:
                 await ctx.send("The subreddit loop is already running, everything is okay. I think so.")
         if not self.DMLoop.is_running():
-            self.femcbot = await self.bot.reddit.user.me()
             self.DMLoop.start()
             await ctx.send("DM: Should be done now!")
         else:
@@ -169,11 +172,6 @@ class RedditCog(commands.Cog):
     # Streams
     @tasks.loop(count=1, loop=set_event_loop(new_event_loop()))
     async def ReleasesLoop(self):
-        if self.releaseschannel is None:
-            if self.bot.DEBUG:
-                self.releaseschannel = self.bot.get_channel(761288869881970718)
-            else:
-                self.releaseschannel = self.bot.get_channel(682515108496408615)
         async for submission in self.ddlcmods.new.stream(skip_existing=True):
             if submission.link_flair_text not in ["Full Release", "Demo Release"]:
                 continue
@@ -205,10 +203,16 @@ Link: https://redd.it/{submission.id}
 
     # Listeners
     @commands.Cog.listener()
-    async def on_command_error(self, ctx: commands.Context, exception):
+    async def cog_command_error(self, ctx: commands.Context, exception: Exception):
         if isinstance(exception, commands.ConversionError):
             if exception.converter == RedditorConverter:
                 return await ctx.send("Redditor was not found. Check the username, is it correct?")
+        else:
+            msg = "There's an error in one of the commands: \n```py\n"
+            msg += "".join(traceback.format_exception(
+                type(exception), exception, exception.__traceback__))
+            msg += "\n```"
+            return await self.bot.debugchannel.send(msg)
 
     @ReleasesLoop.error
     async def RL_error(self, error):
