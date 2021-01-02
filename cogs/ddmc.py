@@ -71,7 +71,7 @@ class WebsiteCog(commands.Cog):
             if diff:
                 # Collecting embeds for paginating
                 temp_modlist = [await self.collect_embed(d) for d in diff]
-                temp_modlist.append((await self.bot.embed).add_field(name="a"))
+                temp_modlist.append((await self.bot.embed).add_field(name="a", value="a"))
                 menu = ModMenuPages(
                     ModPageSource(temp_modlist, per_page=1), diff)
                 await menu.start(
