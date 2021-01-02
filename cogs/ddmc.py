@@ -20,7 +20,7 @@ class WebsiteCog(commands.Cog):
         self._mod_list = []
         self.ids = set()
         bot.loop.create_task(self.ainit())
- 
+
     async def ainit(self):
         await self.bot.wait_until_ready()
         if self.bot.DEBUG:

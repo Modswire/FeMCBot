@@ -110,7 +110,8 @@ class RedditCog(commands.Cog):
 
     @commands.is_owner()
     @ignoregroup.command(name="add")
-    async def ignore_add(self, ctx: commands.Context, redditor: RedditorConverter):
+    async def ignore_add(self, ctx: commands.Context,
+                         redditor: RedditorConverter):
         """
         Adds a Redditor to ignore list.
         Accessible only to Bot Owners.
@@ -125,7 +126,8 @@ class RedditCog(commands.Cog):
 
     @commands.is_owner()
     @ignoregroup.command(name="remove")
-    async def ignore_remove(self, ctx: commands.Context, redditor: RedditorConverter):
+    async def ignore_remove(self, ctx: commands.Context,
+                            redditor: RedditorConverter):
         """
         Removes a Redditor from ignore list.
         Accessible only to Bot Owners.
@@ -203,7 +205,8 @@ Link: https://redd.it/{submission.id}
 
     # Listeners
     @commands.Cog.listener()
-    async def cog_command_error(self, ctx: commands.Context, exception: Exception):
+    async def cog_command_error(self, ctx: commands.Context,
+                                exception: Exception):
         if isinstance(exception, commands.ConversionError):
             if exception.converter == RedditorConverter:
                 return await ctx.send("Redditor was not found. Check the username, is it correct?")
