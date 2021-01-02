@@ -19,6 +19,14 @@ class WebsiteCog(commands.Cog):
         self.headers = get_headers()
         self._mod_list = []
         self.ids = set()
+        bot.loop.create_task(self.ainit())
+ 
+    async def ainit(self):
+        await self.bot.wait_until_ready()
+        if self.bot.DEBUG:
+            self.channel = self.bot.get_channel(761288869881970718)
+        else:
+            self.channel = self.bot.get_channel(680041658922041425)
 
     def cog_unload(self):
         self.ModCheckingLoop.cancel()
@@ -95,11 +103,6 @@ class WebsiteCog(commands.Cog):
         Accessible only to Bot Owners.
         """
         self._ctx = ctx
-        if self.channel is None:
-            if self.bot.DEBUG:
-                self.channel = self.bot.get_channel(761288869881970718)
-            else:
-                self.channel = self.bot.get_channel(680041658922041425)
         if not self.ModCheckingLoop.is_running():
             self.ModCheckingLoop.start()
         await ctx.send("Done!")
