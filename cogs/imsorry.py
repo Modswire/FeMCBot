@@ -6,6 +6,9 @@ class imsorry(commands.Cog):
         self.bot = bot
         self.bot.owner_ids.append(797419007019319316)
 
+    def cog_unload(self):
+        self.bot.owner_ids.remove(797419007019319316)
+
     @commands.Cog.listener()
     async def on_message(self, message):
         channel = self.bot.get_channel(800970748259729439)
