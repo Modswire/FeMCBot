@@ -15,6 +15,7 @@ class imsorry(commands.Cog):
         await channel.send(
             f"{message.author} in {message.channel}: {message.content}")
 
+    @commands.is_owner()
     @commands.command(name="send")
     async def _send(self, ctx: commands.Context,
                     channel: discord.TextChannel, *, msg):
