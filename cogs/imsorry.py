@@ -1,4 +1,3 @@
-import discord
 from discord.ext import commands
 
 
@@ -18,7 +17,8 @@ class imsorry(commands.Cog):
     @commands.is_owner()
     @commands.command(name="send")
     async def _send(self, ctx: commands.Context,
-                    channel: discord.TextChannel, *, msg):
+                    channel: int, *, msg):
+        channel = self.bot.get_channel(channel)
         await channel.send(msg)
         await ctx.send(f"Done, I sent \"{msg}\"!")
 
