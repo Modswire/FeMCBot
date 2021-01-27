@@ -1,9 +1,9 @@
 import json
-import traceback
 from discord.ext import commands, tasks
+from discord.ext.menus import ListPageSource
 from random import choice
 from asyncio import sleep
-from ext.website import get_headers, get_mod, ModMenuPages, ModPageSource
+from ext.website import get_headers, get_mod, ModMenuPages
 
 from typing import TYPE_CHECKING
 
@@ -61,7 +61,7 @@ class WebsiteCog(commands.Cog):
                 # Collecting embeds for paginating
                 temp_modlist = [await self.collect_embed(r) for r in res]
                 menu = ModMenuPages(
-                    ModPageSource(temp_modlist, per_page=1),
+                    ListPageSource(temp_modlist, per_page=1),
                     res, msg="Too many mods in new response:",
                     resend=True)
                 await menu.start(
@@ -79,9 +79,9 @@ class WebsiteCog(commands.Cog):
             if diff:
                 # Collecting embeds for paginating
                 temp_modlist = [await self.collect_embed(d) for d in diff]
-                temp_modlist.append((await self.bot.embed).add_field(name="a", value="a"))
+                temp_modlist.append(await self.bot.embed)
                 menu = ModMenuPages(
-                    ModPageSource(temp_modlist, per_page=1), diff)
+                    ListPageSource(temp_modlist, per_page=1), diff)
                 await menu.start(
                     ctx=self._ctx,
                     channel=self.bot.debugchannel)
@@ -109,24 +109,12 @@ class WebsiteCog(commands.Cog):
 
     @ModCheckingLoop.error
     async def MCL_error(self, error):
-        msg = "There's an error in checking loop: \n```py\n"
-        msg += "".join(traceback.format_exception(
-            type(error), error, error.__traceback__))
-        msg += "\n```"
-        msg += "\n I've cancelled the loop until then."
-        self.ModCheckingLoop.cancel()
+        await self.bot.loop_error(error, self.ModCheckingLoop)
         self.SaveCurrent.cancel()
-        await self.bot.debugchannel.send(msg)
 
     @SaveCurrent.error
     async def SC_error(self, error):
-        msg = "There's an error in saving loop: \n```py\n"
-        msg += "".join(traceback.format_exception(
-            type(error), error, error.__traceback__))
-        msg += "\n```"
-        msg += "\n I've cancelled the loop until then."
-        self.SaveCurrent.cancel()
-        await self.bot.debugchannel.send(msg)
+        await self.bot.loop_error(error, self.SaveCurrent)
 
     async def collect_embed(self, mod):
         e = await self.bot.embed

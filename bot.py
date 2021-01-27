@@ -1,6 +1,7 @@
 import discord
 import apraw
 import aiosqlite
+import traceback
 from datetime import datetime
 from discord.ext import commands
 from ext.website import get_reddit_login, get_token
@@ -22,6 +23,7 @@ class FeMCBot(commands.Bot):
 
         # Getting bot info
         self.db = None
+        self.version = "5.1a"
         # Bot owners
         self.owner_ids = [
             321566831670198272,
@@ -66,6 +68,15 @@ class FeMCBot(commands.Bot):
         embed = discord.Embed(colour=discord.Colour(0).from_rgb(255, 215, 0))
         embed.timestamp = datetime.utcnow()
         return embed
+
+    async def loop_error(self, error, loop):
+        msg = "There's an error in loops: \n```py\n"
+        msg += "".join(traceback.format_exception(
+            type(error), error, error.__traceback__))
+        msg += "\n```"
+        msg += "\n I've cancelled the loop until then."
+        loop.cancel()
+        await self.bot.debugchannel.send(msg)
 
 
 bot = FeMCBot()

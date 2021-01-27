@@ -34,10 +34,10 @@ class RedditorConverter(commands.Converter):
         return user
 
 
-class ModPageSource(menus.ListPageSource):
-    async def format_page(self, menu, item):
-        embed = item
-        return embed
+# class ModPageSource(menus.ListPageSource):
+#     async def format_page(self, menu, item):
+#         embed = item
+#         return embed
 
 
 class ModMenuPages(menus.MenuPages):

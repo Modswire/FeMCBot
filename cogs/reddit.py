@@ -3,7 +3,6 @@ import traceback
 from discord.ext import commands, tasks
 from asyncio import new_event_loop, set_event_loop
 from ext.website import RedditorConverter
-from ext.botinput import botinput
 
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
@@ -63,7 +62,7 @@ class RedditCog(commands.Cog):
         if msgtype == "permission":
             await ctx.send(f"Input u/{redditor.name}'s mod name:",
                            delete_after=60)
-            ModName = await botinput(self.bot, ctx, str)
+            # ModName = await botinput(self.bot, ctx, str)
             subject = self.templates["permission"]["subject"]
             message = self.templates["permission"]["message"].format(
                 redditor.name, ModName)
@@ -71,9 +70,9 @@ class RedditCog(commands.Cog):
         elif msgtype == "copyright":
             await ctx.send(f"Input u/{redditor.name}'s mod name:",
                            delete_after=60)
-            ModName = await botinput(self.bot, ctx, str)
+            # ModName = await botinput(self.bot, ctx, str)
             await ctx.send("Input the issues you found:")
-            issues = (await botinput(self.bot, ctx, str)).replace("\n", "\n\n")
+            # issues = (await botinput(self.bot, ctx, str)).replace("\n", "\n\n")
             subject = self.templates["copyright"]["subject"]
             message = self.templates["copyright"]["message"].format(
                 redditor.name, ModName, issues,
@@ -81,9 +80,9 @@ class RedditCog(commands.Cog):
 
         elif msgtype == "custom":
             await ctx.send("Input message's subject:", delete_after=60)
-            subject = await botinput(self.bot, ctx, str)
+            # subject = await botinput(self.bot, ctx, str)
             await ctx.send("Input message itself:", delete_after=60)
-            message = await botinput(self.bot, ctx, str)
+            # message = await botinput(self.bot, ctx, str)
 
         else:
             return await ctx.send(
@@ -218,23 +217,11 @@ Link: https://redd.it/{submission.id}
 
     @ReleasesLoop.error
     async def RL_error(self, error):
-        msg = "There's an error in releases loop: \n```py\n"
-        msg += "".join(traceback.format_exception(
-            type(error), error, error.__traceback__))
-        msg += "\n```"
-        msg += "\n I've cancelled the loop until then."
-        self.ReleasesLoop.cancel()
-        await self.bot.debugchannel.send(msg)
+        await self.bot.loop_error(error, self.ReleasesLoop)
 
     @DMLoop.error
     async def DM_error(self, error):
-        msg = "There's an error in DM loop: \n```py\n"
-        msg += "".join(traceback.format_exception(
-            type(error), error, error.__traceback__))
-        msg += "\n```"
-        msg += "\n I've cancelled the loop until then."
-        self.DMLoop.cancel()
-        await self.bot.debugchannel.send(msg)
+        await self.bot.loop_error(error, self.DMLoop)
 
 
 def setup(bot: "FeMCBot"):
