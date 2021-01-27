@@ -82,22 +82,6 @@ class MiscCog(commands.Cog):
         deleted = await ctx.channel.purge(limit=amount)
         await ctx.send(f"Deleted {len(deleted)} messages.")
 
-    @commands.group(name="todo", invoke_without_command=False)
-    async def todogroup(self, ctx: commands.Context):
-        pass
-
-    @todogroup.command(name="list")
-    async def todo_list(self, ctx: commands.Context):
-        pass
-
-    @todogroup.command(name="add")
-    async def todo_add(self, ctx: commands.Context, number: int):
-        pass
-
-    @todogroup.command(name="remove")
-    async def todo_remove(self, ctx: commands.Context, number: int):
-        pass
-
 
 def setup(bot: "FeMCBot"):
     bot.add_cog(MiscCog(bot))
