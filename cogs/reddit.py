@@ -59,10 +59,13 @@ class RedditCog(commands.Cog):
         msgtype argument can be `custom`, `copyright` or `permission`.
         """
 
+        def check(m):
+            return m.channel == ctx.channel and m.author == ctx.author
+
         if msgtype == "permission":
             await ctx.send(f"Input u/{redditor.name}'s mod name:",
                            delete_after=60)
-            # ModName = await botinput(self.bot, ctx, str)
+            ModName = await self.bot.wait_for("message", check=check).content
             subject = self.templates["permission"]["subject"]
             message = self.templates["permission"]["message"].format(
                 redditor.name, ModName)
@@ -70,9 +73,10 @@ class RedditCog(commands.Cog):
         elif msgtype == "copyright":
             await ctx.send(f"Input u/{redditor.name}'s mod name:",
                            delete_after=60)
-            # ModName = await botinput(self.bot, ctx, str)
+            ModName = await self.bot.wait_for("message", check=check).content
             await ctx.send("Input the issues you found:")
-            # issues = (await botinput(self.bot, ctx, str)).replace("\n", "\n\n")
+            issues = await self.bot.wait_for("message", check=check)
+            issues = issues.content.replace("\n", "\n\n")
             subject = self.templates["copyright"]["subject"]
             message = self.templates["copyright"]["message"].format(
                 redditor.name, ModName, issues,
@@ -80,9 +84,9 @@ class RedditCog(commands.Cog):
 
         elif msgtype == "custom":
             await ctx.send("Input message's subject:", delete_after=60)
-            # subject = await botinput(self.bot, ctx, str)
+            subject = await self.bot.wait_for("message", check=check).content
             await ctx.send("Input message itself:", delete_after=60)
-            # message = await botinput(self.bot, ctx, str)
+            message = await self.bot.wait_for("message", check=check).content
 
         else:
             return await ctx.send(
