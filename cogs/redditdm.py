@@ -12,6 +12,7 @@ class RedditDMCog(commands.Cog):
     def __init__(self, bot: "FeMCBot"):
         self.bot = bot
         self.templates = {}
+        self.messages = []
         bot.loop.create_task(self.ainit())
 
     # Helpers
@@ -39,7 +40,7 @@ class RedditDMCog(commands.Cog):
 
         # Checking if we can DM the user
         try:
-            await redditor.message(subject=subject, text=message)
+            msg = await redditor.message(subject=subject, text=message)
         except Exception as e:
             await ctx.send("Message sending failed.")
             await self.bot.debugchannel.send("<@321566831670198272> (redditdm)")
@@ -47,6 +48,7 @@ class RedditDMCog(commands.Cog):
             return
 
         await self.dmchannel.send(embed=e)
+        self.messages.append(msg)
         await ctx.send("Done!", delete_after=5)
 
     @commands.group(name="reddit", invoke_without_command=False)
@@ -130,6 +132,7 @@ class RedditDMCog(commands.Cog):
                          url="https://reddit.com/u/"+name)
             e.add_field(name=message.subject, value=message.body)
             e.set_footer(text="Message ID: "+str(message.id))
+            self.messages.append(message)
             await self.dmchannel.send(embed=e)
 
     @DMLoop.error
