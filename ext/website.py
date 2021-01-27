@@ -33,10 +33,6 @@ class RedditorConverter(commands.Converter):
         user = await ctx.bot.reddit.redditor(argument)
         return user
 
-class RedditMessageConverter(commands.Converter):
-    async def convert(self, ctx, argument):
-        account = await ctx.bot.reddit.user.me()
-
 class ModMenuPages(menus.MenuPages):
     def __init__(self, source, mods, msg=None, resend=False, **kwargs):
         self.mods = mods
