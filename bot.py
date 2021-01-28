@@ -60,7 +60,7 @@ class FeMCBot(commands.Bot):
         if not self.DEBUG:
             self.debugchannel = self.get_channel(635546287420342362)  # FeMC
         else:
-            self.debugchannel = self.get_channel(761288869881970718)  # test
+            self.debugchannel = self.get_channel(797044150712533023)  # test
         if not self.db:
             self.db = await aiosqlite.connect("bot-settings/femc.db")
 

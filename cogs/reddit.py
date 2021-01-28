@@ -18,7 +18,7 @@ class RedditCog(commands.Cog):
         await self.bot.wait_until_ready()
 
         if self.bot.DEBUG:
-            self.releaseschannel = self.bot.get_channel(761288869881970718)
+            self.releaseschannel = self.bot.get_channel(797044150712533023)
         else:
             self.releaseschannel = self.bot.get_channel(682515108496408615)
 
@@ -82,7 +82,7 @@ class RedditCog(commands.Cog):
     # Streams
     @tasks.loop(count=1, loop=set_event_loop(new_event_loop()))
     async def ReleasesLoop(self):
-        async for submission in self.ddlcmods.stream.submissions():
+        async for submission in self.ddlcmods.stream.submissions(skip_existing=True):
             if submission.link_flair_text not in ["Full Release", "Demo Release"]:
                 continue
             if submission.author.name in self.releasesignore:
@@ -91,7 +91,7 @@ class RedditCog(commands.Cog):
 Author: {submission.author.name}
 Post name: {submission.title}
 Is NSFW?: {submission.over_18}
-Link: {submission.permalink}
+Link: https://reddit.com{submission.permalink}
             """
             await self.releaseschannel.send(text)
 
