@@ -11,7 +11,7 @@ from ext.website import get_reddit_login, get_token
 class FeMCBot(commands.Bot):
     def __init__(self):
 
-        self.DEBUG = True
+        self.DEBUG = False
 
         # Getting the intents to pass
         intents = discord.Intents.none()
