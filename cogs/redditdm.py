@@ -56,7 +56,7 @@ class RedditDMCog(commands.Cog):
         await self.dmchannel.send(embed=e)
         await ctx.send("Done!", delete_after=5)
 
-    @commands.group(name="reddit", invoke_without_command=False)
+    @commands.group(name="reddit")
     async def redditgroup(self, ctx: commands.Context):
         """
         Commands for managing Reddit stuff.
@@ -64,7 +64,7 @@ class RedditDMCog(commands.Cog):
         pass
 
     @commands.has_any_role(635047784269086740, 667980472164417539)
-    @redditgroup.group(name="dm")
+    @redditgroup.group(name="dm", invoke_without_command=True)
     async def reddit_dm(self, ctx: commands.Context):
         """
         Allows DMing to Reddit users using u/FeMCBot account.
@@ -77,6 +77,9 @@ class RedditDMCog(commands.Cog):
 
     @reddit_dm.command(name="permission")
     async def rdm_p(self, ctx: commands.Context, redditor: RedditorConverter):
+        """
+        Permission message type. Takes redditor's username as the only argument.
+        """
 
         def check(m):
             return m.channel == ctx.channel and m.author == ctx.author
@@ -91,6 +94,9 @@ class RedditDMCog(commands.Cog):
 
     @reddit_dm.command(name="copyright")
     async def rdm_cr(self, ctx: commands.Context, redditor: RedditorConverter):
+        """
+        Copyright message type. Takes redditor's username as the only argument.
+        """
 
         def check(m):
             return m.channel == ctx.channel and m.author == ctx.author
@@ -109,6 +115,9 @@ class RedditDMCog(commands.Cog):
 
     @reddit_dm.command(name="custom")
     async def rdm_ct(self, ctx: commands.Context, redditor: RedditorConverter):
+        """
+        Custom message type. Takes redditor's username as the only argument.
+        """
 
         def check(m):
             return m.channel == ctx.channel and m.author == ctx.author
@@ -121,6 +130,9 @@ class RedditDMCog(commands.Cog):
 
     @reddit_dm.command(name="reply")
     async def rdm_r(self, ctx: commands.Context, mid):
+        """
+        Permission message type. Takes message ID as the only argument.
+        """
         msg = await self.bot.reddit.inbox.message(mid)
 
         def check(m):

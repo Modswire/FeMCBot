@@ -29,7 +29,7 @@ class RedditCog(commands.Cog):
     def cog_unload(self):
         self.ReleasesLoop.cancel()
 
-    @commands.group(name="ignore", invoke_without_command=False)
+    @commands.group(name="ignore")
     async def ignoregroup(self, ctx: commands.Context):
         """
         Commands for managing the ignore list.
