@@ -18,7 +18,7 @@ class RedditCog(commands.Cog):
         await self.bot.wait_until_ready()
 
         if self.bot.DEBUG:
-            self.releaseschannel = self.bot.get_channel(761288869881970718)
+            self.releaseschannel = self.bot.get_channel(797044150712533023)
         else:
             self.releaseschannel = self.bot.get_channel(682515108496408615)
 
@@ -29,7 +29,7 @@ class RedditCog(commands.Cog):
     def cog_unload(self):
         self.ReleasesLoop.cancel()
 
-    @commands.group(name="ignore", invoke_without_command=False)
+    @commands.group(name="ignore")
     async def ignoregroup(self, ctx: commands.Context):
         """
         Commands for managing the ignore list.
@@ -82,21 +82,20 @@ class RedditCog(commands.Cog):
     # Streams
     @tasks.loop(count=1, loop=set_event_loop(new_event_loop()))
     async def ReleasesLoop(self):
-        async for submission in self.ddlcmods.new.stream(skip_existing=True):
+        async for submission in self.ddlcmods.stream.submissions(skip_existing=True):
             if submission.link_flair_text not in ["Full Release", "Demo Release"]:
                 continue
-            author = await submission.author()
-            if author.name in self.releasesignore:
+            if submission.author.name in self.releasesignore:
                 continue
             text = f"""
-Author: {author.name}
+Author: {submission.author.name}
 Post name: {submission.title}
-Link: https://redd.it/{submission.id}
+Is NSFW?: {submission.over_18}
+Link: https://reddit.com{submission.permalink}
             """
             await self.releaseschannel.send(text)
 
     # Listeners
-
     async def on_command_error(self, ctx: commands.Context,
                                exception: Exception):
         if isinstance(exception, commands.ConversionError):

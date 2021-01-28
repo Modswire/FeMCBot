@@ -26,17 +26,18 @@ class MiscCog(commands.Cog):
             self.rfemc = await femc.reddit.user.me()
         website = femc.get_cog("WebsiteCog")
         reddit = femc.get_cog("RedditCog")
+        redditdm = femc.get_cog("RedditDMCog")
         if website is None:
             websiteinfo = 0
             MCLoop = False
         else:
             websiteinfo = len(website._mod_list)
             MCLoop = website.ModCheckingLoop.is_running()
-        if reddit is None:
+        if reddit is None and redditdm is None:
             DMLoop = False
             NMLoop = False
         else:
-            DMLoop = reddit.DMLoop.is_running()
+            DMLoop = redditdm.DMLoop.is_running()
             NMLoop = reddit.ReleasesLoop.is_running()
 
         bi = f"""
@@ -45,7 +46,7 @@ class MiscCog(commands.Cog):
 **Uptime:** Started up {humanize.naturaltime(uptime)}
 **Python version:** {sys.version}
 **discord.py version:** enhanced-dpy {package_version("enhanced-dpy")}
-**aPRAW version:** {package_version("apraw")}
+**asyncPRAW version:** {package_version("asyncpraw")}
         """
 
         di = f"""

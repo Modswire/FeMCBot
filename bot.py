@@ -1,5 +1,6 @@
 import discord
-import apraw
+# import apraw
+import asyncpraw
 import aiosqlite
 import traceback
 from datetime import datetime
@@ -10,7 +11,7 @@ from ext.website import get_reddit_login, get_token
 class FeMCBot(commands.Bot):
     def __init__(self):
 
-        self.DEBUG = True
+        self.DEBUG = False
 
         # Getting the intents to pass
         intents = discord.Intents.none()
@@ -32,7 +33,7 @@ class FeMCBot(commands.Bot):
         # Reddit access info
         (client_id, client_secret, username,
             password, user_agent) = get_reddit_login()
-        self.reddit = apraw.Reddit(
+        self.reddit = asyncpraw.Reddit(
             username=username,
             password=password,
             client_id=client_id,
@@ -45,7 +46,7 @@ class FeMCBot(commands.Bot):
             owner_ids=self.owner_ids)
 
         # Cogs loading
-        coglist = ["jishaku", "cogs.ddmc", "cogs.reddit", "cogs.misc"]
+        coglist = ["jishaku", "cogs.ddmc", "cogs.reddit", "cogs.misc", "cogs.redditdm"]
         for cog in coglist:
             self.load_extension(cog)
             print(f"{cog} was loaded")
@@ -59,7 +60,7 @@ class FeMCBot(commands.Bot):
         if not self.DEBUG:
             self.debugchannel = self.get_channel(635546287420342362)  # FeMC
         else:
-            self.debugchannel = self.get_channel(761288869881970718)  # test
+            self.debugchannel = self.get_channel(797044150712533023)  # test
         if not self.db:
             self.db = await aiosqlite.connect("bot-settings/femc.db")
 
