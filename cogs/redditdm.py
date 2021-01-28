@@ -12,7 +12,6 @@ class RedditDMCog(commands.Cog):
     def __init__(self, bot: "FeMCBot"):
         self.bot = bot
         self.templates = {}
-        self.messages = []
         bot.loop.create_task(self.ainit())
 
     # Helpers
@@ -56,7 +55,6 @@ class RedditDMCog(commands.Cog):
             return
 
         await self.dmchannel.send(embed=e)
-        # self.messages.append(msg)
         await ctx.send("Done!", delete_after=5)
 
     @commands.group(name="reddit", invoke_without_command=False)

@@ -96,7 +96,6 @@ Link: {submission.permalink}
             await self.releaseschannel.send(text)
 
     # Listeners
-
     async def on_command_error(self, ctx: commands.Context,
                                exception: Exception):
         if isinstance(exception, commands.ConversionError):
