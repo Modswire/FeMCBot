@@ -24,26 +24,31 @@ class RedditDMCog(commands.Cog):
         else:
             self.dmchannel = self.bot.get_channel(730433832725250088)
 
-        # REPLACE
-        # self.femcbot = await self.bot.reddit.user.me()
         self.templates = json.load(open("cogs/templates.json"))
         self.DMLoop.start()
 
     def cog_unload(self):
         self.DMLoop.cancel()
 
-    async def send(self, ctx: commands.Context, redditor, subject, message):
+    async def send(self, ctx: commands.Context, dest, subject,
+                   message, reply=False):
         # Collecting the embed for DM log channel
         e = await self.bot.embed
-        e.set_author(name="To u/"+redditor.name,
-                     url="https://reddit.com/u/"+redditor.name)
+        if reply:
+            to = dest.author.name
+            subject = "Re: "+dest.subject
+        else:
+            to = dest.name
+        e.set_author(name="From u/FeMCBot to u/"+to)
         e.add_field(name=subject, value=message)
 
         # Checking if we can DM the user
         try:
-            # REPLACE
-            # msg = await redditor.message(subject=subject, text=message)
-            pass
+            if reply:
+                msg = await dest.reply(message)
+            else:
+                msg = await dest.message(subject=subject, message=message)
+            e.set_footer(text="Message ID: "+msg.id)
         except Exception as e:
             await ctx.send("Message sending failed.")
             await self.bot.debugchannel.send("<@321566831670198272> (redditdm)")
@@ -69,7 +74,8 @@ class RedditDMCog(commands.Cog):
         Accessible only to Site Moderators and Staff members.
         """
         return await ctx.send(
-            "Run the command again and input correct type (`custom`, `copyright` or `permission`)."
+            "Run the command again and input correct type (`custom`,"
+            "`reply`, `copyright` or `permission`)."
             )
 
     @reddit_dm.command(name="permission")
@@ -115,6 +121,17 @@ class RedditDMCog(commands.Cog):
         await ctx.send("Input message itself:", delete_after=60)
         message = await self.bot.wait_for("message", check=check).content
         await self.send(ctx, redditor, subject, message)
+
+    @reddit_dm.command(name="reply")
+    async def rdm_r(self, ctx: commands.Context, mid):
+        msg = await self.bot.reddit.message(mid)
+
+        def check(m):
+            return m.channel == ctx.channel and m.author == ctx.author
+
+        await ctx.send("Input the message to send:", delete_after=60)
+        message = await self.bot.wait_for("message", check=check).content
+        await self.send(ctx, msg, "", message, reply=True)
 
     @commands.has_any_role(635047784269086740, 667980472164417539)
     @redditgroup.command(name="thread")
