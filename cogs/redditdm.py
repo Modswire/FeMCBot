@@ -24,7 +24,8 @@ class RedditDMCog(commands.Cog):
         else:
             self.dmchannel = self.bot.get_channel(730433832725250088)
 
-        self.femcbot = await self.bot.reddit.user.me()
+        # REPLACE
+        # self.femcbot = await self.bot.reddit.user.me()
         self.templates = json.load(open("cogs/templates.json"))
         self.DMLoop.start()
 
@@ -40,7 +41,9 @@ class RedditDMCog(commands.Cog):
 
         # Checking if we can DM the user
         try:
-            msg = await redditor.message(subject=subject, text=message)
+            # REPLACE
+            # msg = await redditor.message(subject=subject, text=message)
+            pass
         except Exception as e:
             await ctx.send("Message sending failed.")
             await self.bot.debugchannel.send("<@321566831670198272> (redditdm)")
@@ -48,7 +51,7 @@ class RedditDMCog(commands.Cog):
             return
 
         await self.dmchannel.send(embed=e)
-        self.messages.append(msg)
+        # self.messages.append(msg)
         await ctx.send("Done!", delete_after=5)
 
     @commands.group(name="reddit", invoke_without_command=False)
@@ -120,19 +123,13 @@ class RedditDMCog(commands.Cog):
 
     @tasks.loop(count=1, loop=set_event_loop(new_event_loop()))
     async def DMLoop(self):
-        if self.dmchannel is None:
-            if self.bot.DEBUG:
-                self.dmchannel = self.bot.get_channel(761288869881970718)
-            else:
-                self.dmchannel = self.bot.get_channel(730433832725250088)
-        async for message in self.femcbot.unread.stream(skip_existing=True):
+        async for message in self.bot.reddit.inbox.stream(skip_existing=True):
             e = await self.bot.embed
-            name = (await message.author()).name
-            e.set_author(name="From u/"+name,
-                         url="https://reddit.com/u/"+name)
+            author = message.author.name
+            recipient = message.dest.name
+            e.set_author(name="From u/"+author+" to u/"+recipient)
             e.add_field(name=message.subject, value=message.body)
-            e.set_footer(text="Message ID: "+str(message.id))
-            self.messages.append(message)
+            e.set_footer(text="Message ID: "+message.id)
             await self.dmchannel.send(embed=e)
 
     @DMLoop.error
