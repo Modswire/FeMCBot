@@ -133,11 +133,6 @@ class RedditDMCog(commands.Cog):
         message = await self.bot.wait_for("message", check=check).content
         await self.send(ctx, msg, "", message, reply=True)
 
-    @commands.has_any_role(635047784269086740, 667980472164417539)
-    @redditgroup.command(name="thread")
-    async def reddit_thread(self, ctx: commands.Context, mid):
-        pass
-
     @tasks.loop(count=1, loop=set_event_loop(new_event_loop()))
     async def DMLoop(self):
         async for message in self.bot.reddit.inbox.stream(skip_existing=True):
