@@ -28,10 +28,10 @@ async def get_mod(endpoint, headers=None):
             return t
 
 
-# class RedditorConverter(commands.Converter):
-#     async def convert(self, ctx, argument):
-#         user = await ctx.bot.reddit.redditor(argument)
-#         return user
+class RedditorConverter(commands.Converter):
+    async def convert(self, ctx, argument):
+        user = await ctx.bot.reddit.redditor(argument)
+        return user
 
 class ModMenuPages(menus.MenuPages):
     def __init__(self, source, mods, msg=None, resend=False, **kwargs):
