@@ -46,7 +46,7 @@ class FeMCBot(commands.Bot):
             owner_ids=self.owner_ids)
 
         # Cogs loading
-        coglist = ["jishaku", "cogs.ddmc", "cogs.reddit", "cogs.misc"]
+        coglist = ["jishaku", "cogs.ddmc", "cogs.reddit", "cogs.misc", "cogs.redditdm"]
         for cog in coglist:
             self.load_extension(cog)
             print(f"{cog} was loaded")

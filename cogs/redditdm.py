@@ -145,3 +145,7 @@ class RedditDMCog(commands.Cog):
     @DMLoop.error
     async def DM_error(self, error):
         await self.bot.loop_error(error, self.DMLoop)
+
+
+def setup(bot: "FeMCBot"):
+    bot.add_cog(RedditDMCog(bot))
