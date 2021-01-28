@@ -82,16 +82,16 @@ class RedditCog(commands.Cog):
     # Streams
     @tasks.loop(count=1, loop=set_event_loop(new_event_loop()))
     async def ReleasesLoop(self):
-        async for submission in self.ddlcmods.new.stream(skip_existing=True):
+        async for submission in self.ddlcmods.stream.submissions():
             if submission.link_flair_text not in ["Full Release", "Demo Release"]:
                 continue
-            author = await submission.author()
-            if author.name in self.releasesignore:
+            if submission.author.name in self.releasesignore:
                 continue
             text = f"""
-Author: {author.name}
+Author: {submission.author.name}
 Post name: {submission.title}
-Link: https://redd.it/{submission.id}
+Is NSFW?: {submission.over_18}
+Link: {submission.permalink}
             """
             await self.releaseschannel.send(text)
 
