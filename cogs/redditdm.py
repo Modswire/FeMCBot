@@ -131,7 +131,7 @@ class RedditDMCog(commands.Cog):
     @reddit_dm.command(name="reply")
     async def rdm_r(self, ctx: commands.Context, mid):
         """
-        Permission message type. Takes message ID as the only argument.
+        Reply message type. Takes message ID as the only argument.
         """
         msg = await self.bot.reddit.inbox.message(mid)
 
