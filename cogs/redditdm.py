@@ -19,7 +19,7 @@ class RedditDMCog(commands.Cog):
         await self.bot.wait_until_ready()
 
         if self.bot.DEBUG:
-            self.dmchannel = self.bot.get_channel(761288869881970718)
+            self.dmchannel = self.bot.get_channel(797044150712533023)
         else:
             self.dmchannel = self.bot.get_channel(730433832725250088)
 
@@ -35,7 +35,7 @@ class RedditDMCog(commands.Cog):
         e = await self.bot.embed
         if reply:
             to = dest.author.name
-            subject = "Re: "+dest.subject
+            subject = dest.subject
         else:
             to = dest.name
         e.set_author(name="From u/FeMCBot to u/"+to)
@@ -44,10 +44,9 @@ class RedditDMCog(commands.Cog):
         # Checking if we can DM the user
         try:
             if reply:
-                msg = await dest.reply(message)
+                await dest.reply(message)
             else:
-                msg = await dest.message(subject=subject, message=message)
-            e.set_footer(text="Message ID: "+msg.id)
+                await dest.message(subject=subject, message=message)
         except Exception as e:
             await ctx.send("Message sending failed.")
             await self.bot.debugchannel.send("<@321566831670198272> (redditdm)")
@@ -84,7 +83,7 @@ class RedditDMCog(commands.Cog):
 
         await ctx.send(f"Input u/{redditor.name}'s mod name:",
                        delete_after=60)
-        ModName = await self.bot.wait_for("message", check=check).content
+        ModName = (await self.bot.wait_for("message", check=check)).content
         subject = self.templates["permission"]["subject"]
         message = self.templates["permission"]["message"].format(
             redditor.name, ModName)
@@ -98,7 +97,7 @@ class RedditDMCog(commands.Cog):
 
         await ctx.send(f"Input u/{redditor.name}'s mod name:",
                        delete_after=60)
-        ModName = await self.bot.wait_for("message", check=check).content
+        ModName = (await self.bot.wait_for("message", check=check)).content
         await ctx.send("Input the issues you found:")
         issues = await self.bot.wait_for("message", check=check)
         issues = issues.content.replace("\n", "\n\n")
@@ -115,20 +114,20 @@ class RedditDMCog(commands.Cog):
             return m.channel == ctx.channel and m.author == ctx.author
 
         await ctx.send("Input message's subject:", delete_after=60)
-        subject = await self.bot.wait_for("message", check=check).content
+        subject = (await self.bot.wait_for("message", check=check)).content
         await ctx.send("Input message itself:", delete_after=60)
-        message = await self.bot.wait_for("message", check=check).content
+        message = (await self.bot.wait_for("message", check=check)).content
         await self.send(ctx, redditor, subject, message)
 
     @reddit_dm.command(name="reply")
     async def rdm_r(self, ctx: commands.Context, mid):
-        msg = await self.bot.reddit.message(mid)
+        msg = await self.bot.reddit.inbox.message(mid)
 
         def check(m):
             return m.channel == ctx.channel and m.author == ctx.author
 
         await ctx.send("Input the message to send:", delete_after=60)
-        message = await self.bot.wait_for("message", check=check).content
+        message = (await self.bot.wait_for("message", check=check)).content
         await self.send(ctx, msg, "", message, reply=True)
 
     @tasks.loop(count=1, loop=set_event_loop(new_event_loop()))
