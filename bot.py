@@ -1,5 +1,5 @@
 import discord
-# import apraw
+import apraw
 import asyncpraw
 import aiosqlite
 import traceback
@@ -35,6 +35,12 @@ class FeMCBot(commands.Bot):
         (client_id, client_secret, username,
             password, user_agent) = get_reddit_login()
         self.reddit = asyncpraw.Reddit(
+            username=username,
+            password=password,
+            client_id=client_id,
+            client_secret=client_secret,
+            user_agent=user_agent)
+        self.apraw = apraw.Reddit(
             username=username,
             password=password,
             client_id=client_id,

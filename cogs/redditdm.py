@@ -23,6 +23,7 @@ class RedditDMCog(commands.Cog):
         else:
             self.dmchannel = self.bot.get_channel(730433832725250088)
 
+        self.femcbot = await self.bot.apraw.user.me()
         self.templates = json.load(open("cogs/templates.json"))
         self.DMLoop.start()
 
@@ -144,14 +145,15 @@ class RedditDMCog(commands.Cog):
 
     @tasks.loop(count=1, loop=set_event_loop(new_event_loop()))
     async def DMLoop(self):
-        async for message in self.bot.reddit.inbox.stream(skip_existing=True):
+        async for message in self.femcbot.unread.stream(skip_existing=True):
             e = await self.bot.embed
-            author = message.author.name
-            recipient = message.dest.name
-            e.set_author(name="From u/"+author+" to u/"+recipient)
+            name = (await message.author()).name
+            e.set_author(name="From u/"+name,
+                         url="https://reddit.com/u/"+name)
             e.add_field(name=message.subject, value=message.body)
-            e.set_footer(text="Message ID: "+message.id)
+            e.set_footer(text="Message ID: "+str(message.id))
             await self.dmchannel.send(embed=e)
+
 
     @DMLoop.error
     async def DM_error(self, error):
