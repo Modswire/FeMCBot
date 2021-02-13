@@ -22,7 +22,7 @@ class RedditCog(commands.Cog):
         else:
             self.releaseschannel = self.bot.get_channel(682515108496408615)
 
-        self.ddlcmods = await self.bot.reddit.subreddit("DDLCMods")
+        self.ddlcmods = await self.bot.apraw.subreddit("DDLCMods")
         self.releasesignore = json.load(open("bot-settings/ignore.json"))["ignore"]
         self.ReleasesLoop.start()
 
@@ -82,13 +82,14 @@ class RedditCog(commands.Cog):
     # Streams
     @tasks.loop(count=1, loop=set_event_loop(new_event_loop()))
     async def ReleasesLoop(self):
-        async for submission in self.ddlcmods.stream.submissions(skip_existing=True):
+        async for submission in self.ddlcmods.new.stream(skip_existing=True):
             if submission.link_flair_text not in ["Full Release", "Demo Release"]:
                 continue
-            if submission.author.name in self.releasesignore:
+            author = await submission.author()
+            if author.name in self.releasesignore:
                 continue
             text = f"""
-Author: {submission.author.name}
+Author: {author.name}
 Post name: {submission.title}
 Is NSFW?: {submission.over_18}
 Link: https://reddit.com{submission.permalink}
