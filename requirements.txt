@@ -1,6 +1,7 @@
 enhanced-dpy>=1.6.0.6
 jishaku>=1.18.2
 asyncpraw
+apraw
 aiosqlite
 aiologger
 git+https://github.com/Rapptz/discord-ext-menus
