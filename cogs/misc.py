@@ -47,6 +47,7 @@ class MiscCog(commands.Cog):
 **Python version:** {sys.version}
 **discord.py version:** enhanced-dpy {package_version("enhanced-dpy")}
 **asyncPRAW version:** {package_version("asyncpraw")}
+**aPRAW version:** {package_version("apraw")}
         """
 
         di = f"""

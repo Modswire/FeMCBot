@@ -5,7 +5,6 @@ import aiosqlite
 import traceback
 from datetime import datetime
 from discord.ext import commands
-from asyncprawcore.exceptions import ServerError
 from ext.website import get_reddit_login, get_token
 
 
@@ -78,13 +77,8 @@ class FeMCBot(commands.Bot):
         return embed
 
     async def loop_error(self, error, loop):
-        if isinstance(error, ServerError):
-            msg = "Reddit loop reported a server error, reloading. \n```py\n"
-            loop.cancel()
-            loop.start()
-        else:
-            msg = "There's an error in loops: \n```py\n"
-            loop.cancel()
+        loop.cancel()
+        msg = "There's an error in loops: \n```py\n"
         msg += "".join(traceback.format_exception(
             type(error), error, error.__traceback__))
         msg += "\n```"
