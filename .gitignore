@@ -32,3 +32,4 @@ bot-settings/
 .vscode/
 logs/
 bot.sh
+extensions/
