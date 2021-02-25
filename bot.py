@@ -84,6 +84,11 @@ class FeMCBot(commands.Bot):
         msg += "\n```"
         await self.debugchannel.send(msg)
 
+    async def on_message(self, message):
+        if message.guild.id == 814475023360327690:
+            return
+        await self.process_commands(message)
+
 
 bot = FeMCBot()
 if bot.DEBUG:
