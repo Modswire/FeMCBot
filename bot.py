@@ -24,7 +24,7 @@ class FeMCBot(commands.Bot):
 
         # Getting bot info
         self.db = None
-        self.version = "5.1a"
+        self.version = "5.1"
         # Bot owners
         self.owner_ids = [
             321566831670198272,
