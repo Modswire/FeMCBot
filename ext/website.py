@@ -27,6 +27,9 @@ async def get_mod(endpoint, headers=None):
             t = await resp.json()
             return t
 
+class ModPageSource(menus.ListPageSource):
+    async def format_page(self, menu, item):
+        return item
 
 class RedditorConverter(commands.Converter):
     async def convert(self, ctx, argument):

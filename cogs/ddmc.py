@@ -1,9 +1,8 @@
 import json
 from discord.ext import commands, tasks
-from discord.ext.menus import ListPageSource
 from random import choice
 from asyncio import sleep
-from ext.website import get_headers, get_mod, ModMenuPages
+from ext.website import get_headers, get_mod, ModMenuPages, ModPageSource
 
 from typing import TYPE_CHECKING
 
@@ -61,7 +60,7 @@ class WebsiteCog(commands.Cog):
                 # Collecting embeds for paginating
                 temp_modlist = [await self.collect_embed(r) for r in res]
                 menu = ModMenuPages(
-                    ListPageSource(temp_modlist, per_page=1),
+                    ModPageSource(temp_modlist, per_page=1),
                     res, msg="Too many mods in new response:",
                     resend=True)
                 await menu.start(
@@ -81,7 +80,7 @@ class WebsiteCog(commands.Cog):
                 temp_modlist = [await self.collect_embed(d) for d in diff]
                 temp_modlist.append(await self.bot.embed)
                 menu = ModMenuPages(
-                    ListPageSource(temp_modlist, per_page=1), diff)
+                    ModPageSource(temp_modlist, per_page=1), diff)
                 await menu.start(
                     ctx=self._ctx,
                     channel=self.bot.debugchannel)
