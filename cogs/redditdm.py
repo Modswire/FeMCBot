@@ -20,8 +20,10 @@ class RedditDMCog(commands.Cog):
 
         if self.bot.DEBUG:
             self.dmchannel = self.bot.get_channel(797044150712533023)
+            self.qchannel = self.bot.get_channel(797044150712533023)
         else:
             self.dmchannel = self.bot.get_channel(730433832725250088)
+            self.qchannel = self.bot.get_channel(743419482701168701)
 
         self.femcbot = await self.bot.apraw.user.me()
         self.templates = json.load(open("cogs/templates.json"))
@@ -29,6 +31,34 @@ class RedditDMCog(commands.Cog):
 
     def cog_unload(self):
         self.DMLoop.cancel()
+
+    async def queue(self, **kwargs):
+        keys = kwargs.keys()
+        if not "modStatus" in keys: raise Exception
+        modStatus = kwargs["modStatus"]
+        
+        if "mid" in keys and "ctx" in keys: # editing contents
+            mid: int = kwargs["mid"]
+            ctx: commands.Context = kwargs["ctx"]
+            msg: discord.Message = await ctx.fetch_message(mid)
+            if not msg.embeds: raise Exception
+            embed = msg.embeds[0]
+            modName = embed.fields[0].name[11:] #12th symbol is mod author start
+            nline = embed.fields[0].value.find("Current status: ")
+            modAuthor = embed.fields[0].value[12:nline-1] #13th symbol is mod name start and the last symbol in nline is \n
+        
+        elif "modName" in keys and "modAuthor" in keys: # sending new one
+            modName = kwargs["modName"]
+            modAuthor = kwargs["modAuthor"]
+        
+        else: raise Exception
+        e = await self.bot.embed
+        e.add_field(name=f"Status for {modName}",
+                    value=(f"**Mod Author:** {modAuthor}\n"
+                    f"**Current status:** {modStatus}"))
+        if "mid" in keys and "ctx" in keys: # --> we have a msg object
+            await msg.edit(embed=e)
+        else: await self.qchannel.send(embed=e)
 
     async def send(self, ctx: commands.Context, dest, subject,
                    message, reply=False):
@@ -57,15 +87,55 @@ class RedditDMCog(commands.Cog):
         await self.dmchannel.send(embed=e)
         await ctx.send("Done!", delete_after=5)
 
-    @commands.group(name="reddit")
-    async def redditgroup(self, ctx: commands.Context):
+    @commands.has_any_role(635047784269086740, 667980472164417539)
+    @commands.group(name="queue", aliases=["q"])
+    async def queuecmd(self, ctx: commands.Context):
         """
-        Commands for managing Reddit stuff.
+        Commands for managing the mod queue.
+        Accessible only to Site Moderators and Staff members.
         """
-        pass
+
+    @queuecmd.command(name="add", aliases=["a"])
+    async def q_add(self, ctx: commands.Context):
+        """
+        Adding the mod in the queue. Usually this happens automatically by invoking 'redditdm permission' command.
+        """
+        
+        def check(m):
+            return m.channel == ctx.channel and m.author == ctx.author
+
+        await ctx.send(f"Input the mod name:",
+                       delete_after=60)
+        modName = (await self.bot.wait_for("message", check=check)).content
+        await ctx.send(f"Input the mod author:",
+                       delete_after=60)
+        modAuthor = (await self.bot.wait_for("message", check=check)).content
+        await ctx.send(f"Input current mod status in the queue:",
+                       delete_after=60)
+        modStatus = (await self.bot.wait_for("message", check=check)).content
+        await self.queue(modName=modName, modAuthor=modAuthor, modStatus=modStatus)
+        await ctx.send("Done!")
+    
+    @queuecmd.command(name="edit", aliases=["e"])
+    async def q_edit(self, ctx: commands.Context):
+        """
+        Editing the mod in the queue.
+        """
+
+        def check(m):
+            return m.channel == ctx.channel and m.author == ctx.author
+
+        await ctx.send(f"Input the message ID of the mod in the queue:",
+                       delete_after=60)
+        modID = int((await self.bot.wait_for("message", check=check)).content)
+        await ctx.send(f"Input current mod status in the queue:",
+                       delete_after=60)
+        modStatus = (await self.bot.wait_for("message", check=check)).content
+        await self.queue(mid=modID, ctx=ctx, modStatus=modStatus)
+        await ctx.send("Done!")
 
     @commands.has_any_role(635047784269086740, 667980472164417539)
-    @redditgroup.group(name="dm", invoke_without_command=True)
+    @commands.group(name="redditdm", aliases=["rdm"], invoke_without_command=True)
     async def reddit_dm(self, ctx: commands.Context):
         """
         Allows DMing to Reddit users using u/FeMCBot account.
@@ -92,6 +162,7 @@ class RedditDMCog(commands.Cog):
         message = self.templates["permission"]["message"].format(
             redditor.name, ModName)
         await self.send(ctx, redditor, subject, message)
+        await self.queue(modName=ModName, modAuthor=redditor.name, modStatus="Waiting for a permission")
 
     @reddit_dm.command(name="copyright")
     async def rdm_cr(self, ctx: commands.Context, redditor: RedditorConverter):
