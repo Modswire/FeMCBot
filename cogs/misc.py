@@ -16,6 +16,7 @@ class MiscCog(commands.Cog):
     def __init__(self, bot: "FeMCBot"):
         self.bot = bot
         self.rfemc = None
+        self.status.start()
 
     @commands.command()
     async def about(self, ctx: commands.Context):
