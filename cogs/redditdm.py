@@ -1,4 +1,5 @@
 import json
+import traceback
 from discord.ext import commands, tasks
 from asyncio import new_event_loop, set_event_loop
 from ext.website import RedditorConverter
@@ -229,6 +230,14 @@ class RedditDMCog(commands.Cog):
     @DMLoop.error
     async def DM_error(self, error):
         await self.bot.loop_error(error, self.DMLoop)
+    
+    @queuecmd.error
+    async def on_q_error(self, error):
+        msg = "There's an error in queue command: \n```py\n"
+        msg += "".join(traceback.format_exception(
+            type(error), error, error.__traceback__))
+        msg += "\n```"
+        await self.bot.debugchannel.send(msg)
 
 
 def setup(bot: "FeMCBot"):
