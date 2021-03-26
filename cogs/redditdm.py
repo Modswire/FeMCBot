@@ -45,8 +45,8 @@ class RedditDMCog(commands.Cog):
             if not msg.embeds: raise Exception
             embed = msg.embeds[0]
             modName = embed.fields[0].name[11:] #12th symbol is mod author start
-            nline = embed.fields[0].value.find("Current status: ")
-            modAuthor = embed.fields[0].value[12:nline-1] #13th symbol is mod name start and the last symbol in nline is \n
+            nline = embed.fields[0].value.find("**Current status:** ")
+            modAuthor = embed.fields[0].value[14:nline-1] #15th symbol is mod name start and the last symbol in nline is \n
         
         elif "modName" in keys and "modAuthor" in keys: # sending new one
             modName = kwargs["modName"]
