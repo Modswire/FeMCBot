@@ -38,10 +38,10 @@ class RedditDMCog(commands.Cog):
         if not "modStatus" in keys: raise Exception
         modStatus = kwargs["modStatus"]
         
-        if "mid" in keys and "ctx" in keys: # editing contents
+        if "mid" in keys: # editing contents
             mid: int = kwargs["mid"]
-            ctx: commands.Context = kwargs["ctx"]
-            msg: discord.Message = await ctx.fetch_message(mid)
+            channel = self.qchannel
+            msg: discord.Message = await channel.fetch_message(mid)
             if not msg.embeds: raise Exception
             embed = msg.embeds[0]
             modName = embed.fields[0].name[11:] #12th symbol is mod author start
@@ -57,7 +57,7 @@ class RedditDMCog(commands.Cog):
         e.add_field(name=f"Status for {modName}",
                     value=(f"**Mod Author:** {modAuthor}\n"
                     f"**Current status:** {modStatus}"))
-        if "mid" in keys and "ctx" in keys: # --> we have a msg object
+        if "mid" in keys: # --> we have a msg object
             await msg.edit(embed=e)
         else: await self.qchannel.send(embed=e)
 
@@ -132,7 +132,7 @@ class RedditDMCog(commands.Cog):
         await ctx.send(f"Input current mod status in the queue:",
                        delete_after=60)
         modStatus = (await self.bot.wait_for("message", check=check)).content
-        await self.queue(mid=modID, ctx=ctx, modStatus=modStatus)
+        await self.queue(mid=modID, modStatus=modStatus)
         await ctx.send("Done!")
 
     @commands.has_any_role(635047784269086740, 667980472164417539)
