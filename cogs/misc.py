@@ -1,10 +1,12 @@
-from discord.ext import commands
-from datetime import datetime
-from jishaku.modules import package_version
-import humanize
 import sys
-
+import random
+from datetime import datetime
 from typing import TYPE_CHECKING
+
+import discord
+import humanize
+from discord.ext import commands, tasks
+from jishaku.modules import package_version
 
 if TYPE_CHECKING:
     from bot import FeMCBot
@@ -83,6 +85,15 @@ class MiscCog(commands.Cog):
         await ctx.message.delete()
         deleted = await ctx.channel.purge(limit=amount)
         await ctx.send(f"Deleted {len(deleted)} messages.")
+
+    @tasks.loop(hours=1)
+    async def status(self):
+        website = self.bot.get_cog("WebsiteCog")
+        mods = len(website._mod_list)
+        textlist = [f"to {mods} mods available on the website", "to all the permission messages I send", "how copyright checking is done"]
+        presence = discord.Activity(name=random.choice(textlist)+" | femc help",
+                                    type=discord.ActivityType.watching)
+        await self.bot.change_presence(activity=presence)
 
 
 def setup(bot: "FeMCBot"):
