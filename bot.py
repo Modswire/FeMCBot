@@ -18,18 +18,17 @@ class FeMCBot(commands.Bot):
         intents.guilds = True
         intents.messages = True
         if not self.DEBUG:
-            intents.members = True  # comment on test
+            intents.members = True
         intents.bans = True
         intents.reactions = True
 
         # Getting bot info
         self.db = None
-        self.version = "5.1"
+        self.version = "5.2-greenlight"
         # Bot owners
         self.owner_ids = [
             321566831670198272,
-            154328221154803712,
-            105625086739931136]
+            ]
         # Reddit access info
         (client_id, client_secret, username,
             password, user_agent) = get_reddit_login()
@@ -52,7 +51,7 @@ class FeMCBot(commands.Bot):
             owner_ids=self.owner_ids)
 
         # Cogs loading
-        coglist = ["jishaku", "cogs.ddmc", "cogs.reddit", "cogs.misc", "cogs.redditdm"]
+        coglist = ["jishaku", "cogs.ddmc"]
         for cog in coglist:
             self.load_extension(cog)
             print(f"{cog} was loaded")
