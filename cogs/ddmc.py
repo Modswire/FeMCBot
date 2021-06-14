@@ -16,7 +16,7 @@ class WebsiteCog(commands.Cog):
         self._ctx = None
         self.channel = None
         self.headers = get_headers()
-        self._mod_list = []
+        self._mod_list = json.load("datadump.json")
         self.ids = set()
         bot.loop.create_task(self.ainit())
 
@@ -94,17 +94,17 @@ class WebsiteCog(commands.Cog):
         ids = [i for i in self.ids]
         json.dump({"ids": ids}, open("bot-settings/modlist.json", "w"))
 
-    @commands.is_owner()
-    @commands.command()
-    async def setwebsite(self, ctx):
-        """
-        Updates all the variables for running mod checking loop.
-        Accessible only to Bot Owners.
-        """
-        self._ctx = ctx
-        if not self.ModCheckingLoop.is_running():
-            self.ModCheckingLoop.start()
-        await ctx.send("Done!")
+    # @commands.is_owner()
+    # @commands.command()
+    # async def setwebsite(self, ctx):
+    #     """
+    #     Updates all the variables for running mod checking loop.
+    #     Accessible only to Bot Owners.
+    #     """
+    #     self._ctx = ctx
+    #     if not self.ModCheckingLoop.is_running():
+    #         self.ModCheckingLoop.start()
+    #     await ctx.send("Done!")
 
     @ModCheckingLoop.error
     async def MCL_error(self, error):
@@ -135,11 +135,11 @@ class WebsiteCog(commands.Cog):
         e.add_field(name="Is NSFW?", value="Yes" if mod["modNSFW"] else "No")
         e.add_field(
             name="Link",
-            value="[Click](https://www.dokidokimodclub.com/mod/{}/)".format(
-                mod["modID"]
+            value="[Click]({})".format(
+                mod["modUploadURL"]
             )
         )
-        e.set_footer(text="Powered by dokidokimodclub.com's API")
+        e.set_footer(text="Powered by dokidokimodclub.com's API dump")
         return e
 
 
