@@ -16,7 +16,7 @@ class WebsiteCog(commands.Cog):
         self._ctx = None
         self.channel = None
         self.headers = get_headers()
-        self._mod_list = json.load("datadump.json")
+        self._mod_list = json.load(open("datadump.json", "r"))
         self.ids = set()
         bot.loop.create_task(self.ainit())
 
