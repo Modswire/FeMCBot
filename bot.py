@@ -1,5 +1,4 @@
 import discord
-import apraw
 import asyncpraw
 import aiosqlite
 import traceback
@@ -38,12 +37,6 @@ class FeMCBot(commands.Bot):
             client_id=client_id,
             client_secret=client_secret,
             user_agent=user_agent)
-        self.apraw = apraw.Reddit(
-            username=username,
-            password=password,
-            client_id=client_id,
-            client_secret=client_secret,
-            user_agent=user_agent)
 
         super().__init__(
             command_prefix="femc ",
@@ -51,7 +44,7 @@ class FeMCBot(commands.Bot):
             owner_ids=self.owner_ids)
 
         # Cogs loading
-        coglist = ["jishaku", "cogs.ddmc"]
+        coglist = ["jishaku"]
         for cog in coglist:
             self.load_extension(cog)
             print(f"{cog} was loaded")
@@ -66,22 +59,12 @@ class FeMCBot(commands.Bot):
             self.debugchannel = self.get_channel(635546287420342362)  # FeMC
         else:
             self.debugchannel = self.get_channel(797044150712533023)  # test
-        if not self.db:
-            self.db = await aiosqlite.connect("bot-settings/femc.db")
 
     @property
     async def embed(self):
         embed = discord.Embed(colour=discord.Colour(0).from_rgb(255, 215, 0))
         embed.timestamp = datetime.utcnow()
         return embed
-
-    async def loop_error(self, error, loop):
-        loop.cancel()
-        msg = "There's an error in loops: \n```py\n"
-        msg += "".join(traceback.format_exception(
-            type(error), error, error.__traceback__))
-        msg += "\n```"
-        await self.debugchannel.send(msg)
 
 
 bot = FeMCBot()
